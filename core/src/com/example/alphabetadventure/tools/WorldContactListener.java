@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.sprites.Letter;
+import com.example.alphabetadventure.sprites.endoflevel.Plank;
 import com.example.alphabetadventure.sprites.enemies.Enemy;
 import com.example.alphabetadventure.sprites.items.NextLetter;
 import com.example.alphabetadventure.sprites.items.PowerUp;
@@ -125,6 +126,16 @@ public class WorldContactListener implements ContactListener {
 
 
                 break;
+            case MainClass.LETTER_BIT | MainClass.PLANKS_BIT: //mario collides with enemy head
+                if (fixA.getFilterData().categoryBits == MainClass.PLANKS_BIT) {//then we know fixa is enemy
+                    ((Plank) fixA.getUserData()).onHit();//
+                   // ((Plank) fixA.getUserData()).flip(true,false);
+                } else{
+                    ((Plank) fixb.getUserData()).onHit();
+                  //  ((Plank) fixb.getUserData()).flip(true,false);
+                }
+
+
         }
 
 
@@ -142,22 +153,22 @@ public class WorldContactListener implements ContactListener {
         switch (cDef) {
             case MainClass.LETTER_BIT | MainClass.OBJECT_BIT: //mario collides with enemy head
                 if (fixA.getFilterData().categoryBits == MainClass.LETTER_BIT) {//then we know fixa is enemy
-                    if(Letter.isRunningRight()) {
-                        ((Letter) fixA.getUserData()).setOrigin(-0.2f,-0.3f);
+                    if (Letter.isRunningRight()) {
+                        ((Letter) fixA.getUserData()).setOrigin(-0.2f, -0.3f);
 
                         ((Letter) fixA.getUserData()).setRotation(0);
-                    }else {
-                        ((Letter) fixb.getUserData()).setOrigin(-0.15f,-0.2f);
+                    } else {
+                        ((Letter) fixb.getUserData()).setOrigin(-0.15f, -0.2f);
 
 
                         ((Letter) fixA.getUserData()).setRotation(0);
 
                     }
 
-                } else{
-                    if(Letter.isRunningRight()) {
+                } else {
+                    if (Letter.isRunningRight()) {
                         ((Letter) fixb.getUserData()).setRotation(0);
-                    }else{
+                    } else {
                         ((Letter) fixb.getUserData()).setRotation(0);
 
                     }
@@ -165,6 +176,7 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
         }
+
     }
 
     @Override

@@ -29,6 +29,7 @@ public class MainClass extends Game {//changed to game from application adapter
 	public static final short NEXTLETTER_BIT = 256;
 	public static final short LETTER_HEAD_BIT = 512;
 	public static final short POWER_UP_BIT = 1024;
+	public static final short PLANKS_BIT = 2048;
 
 
 	//todo put in classes that need it using in static way can cause probems

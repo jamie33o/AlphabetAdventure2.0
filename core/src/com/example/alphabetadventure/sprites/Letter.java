@@ -202,7 +202,7 @@ public TextureRegion getFrame(float dt){
 
     public void defineLetter(){
         BodyDef bdef =new BodyDef();
-        bdef.position.set(362/ MainClass.PPM,32/ MainClass.PPM);//use to set start position on map
+        bdef.position.set(6662/ MainClass.PPM,32/ MainClass.PPM);//use to set start position on map
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
@@ -213,6 +213,7 @@ public TextureRegion getFrame(float dt){
         fdef.filter.categoryBits = MainClass.LETTER_BIT;
         //sets wat letter can colide with
         fdef.filter.maskBits =
+                MainClass.PLANKS_BIT|
                 MainClass.GROUND_BIT|
                 MainClass.NEXT_LETTER_BOX_BIT |
                 MainClass.POWER_UP_BIT|

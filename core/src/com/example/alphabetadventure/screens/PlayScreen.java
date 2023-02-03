@@ -5,6 +5,7 @@ import static com.example.alphabetadventure.sprites.Letter.letterCounter;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -12,14 +13,16 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.example.alphabetadventure.MainClass;
-import com.example.alphabetadventure.endoflevel.TowerPlanks;
 import com.example.alphabetadventure.scenes.Hud;
+import com.example.alphabetadventure.sprites.endoflevel.Plank;
 import com.example.alphabetadventure.sprites.enemies.Enemy;
 import com.example.alphabetadventure.sprites.Letter;
 import com.example.alphabetadventure.sprites.items.NextLetter;
@@ -155,14 +158,15 @@ public class PlayScreen implements Screen {
             if (enemy.getX() < player.getX() + 424 / MainClass.PPM) //224 is 14 16px tiles when player 14 tiles away enemy wakes
                 enemy.b2body.setActive(true);//wakes enemy up when player comes close
         }
+        for(Plank planks: creator.getPlanks()) {
+            planks.update(dt);
+
+        }
         for(Item item: items){
             item.update(dt);
 
         }
-        /*for(TowerPlanks planks: creator.getPlanks()) {
-            planks.update(dt);
 
-        }*/
 
 
             hud.update(dt);
@@ -189,6 +193,7 @@ public class PlayScreen implements Screen {
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);//clears  screen between frames
+
 
         renderer.render();
 
@@ -225,19 +230,19 @@ public class PlayScreen implements Screen {
         }
 
 
-
         for(Enemy enemy: creator.getGoombas()) {//draws all enemies
+
             enemy.draw(game.batch);
         }
+        for(Plank planks: creator.getPlanks()) {
+            planks.draw(game.batch);
 
+        }
         for(Item item: items){//draws all collectable items
             item.draw(game.batch);
 
         }
-      /*  for(TowerPlanks planks: creator.getPlanks()) {
-            planks.draw(game.batch);
 
-        }*/
 
         game.batch.end();//close batch
 

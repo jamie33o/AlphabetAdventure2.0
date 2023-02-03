@@ -2,7 +2,6 @@ package com.example.alphabetadventure.tools;
 
 import static com.example.alphabetadventure.screens.PlayScreen.gamePort;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -17,8 +16,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.example.alphabetadventure.MainClass;
-import com.example.alphabetadventure.endoflevel.TowerPlanks;
 import com.example.alphabetadventure.screens.PlayScreen;
+import com.example.alphabetadventure.sprites.endoflevel.Plank;
 import com.example.alphabetadventure.sprites.tileobjects.PowerUpBox;
 import com.example.alphabetadventure.sprites.enemies.Numbers;
 import com.example.alphabetadventure.sprites.tileobjects.NextLetterBox;
@@ -27,7 +26,7 @@ public class B2WorldCreator {
     Polygon poly;
     float[] vertices;
 
-    private Array<TowerPlanks> planks;
+    private Array<Plank> planks;
 
     private Array<Numbers> goombas;
     public B2WorldCreator(PlayScreen screen){
@@ -54,7 +53,7 @@ public class B2WorldCreator {
             shape.setAsBox(rect.getWidth() / 2/ MainClass.PPM, rect.getHeight() /2/ MainClass.PPM);
             fdef.shape = shape;
             fdef.filter.categoryBits = MainClass.GROUND_BIT;
-            fdef.filter.maskBits = MainClass.GROUND_BIT| MainClass.NEXT_LETTER_BOX_BIT|MainClass.POWER_UP_BIT |MainClass.POWER_UP_BOX_BIT |MainClass.OBJECT_BIT|MainClass.ENEMY_HEAD_BIT|MainClass.ENEMY_BIT| MainClass.NEXTLETTER_BIT |MainClass.LETTER_BIT;
+            fdef.filter.maskBits = MainClass.GROUND_BIT|MainClass.PLANKS_BIT| MainClass.NEXT_LETTER_BOX_BIT|MainClass.POWER_UP_BIT |MainClass.POWER_UP_BOX_BIT |MainClass.OBJECT_BIT|MainClass.ENEMY_HEAD_BIT|MainClass.ENEMY_BIT| MainClass.NEXTLETTER_BIT |MainClass.LETTER_BIT;
 
             body.createFixture(fdef);
         }
@@ -112,11 +111,15 @@ public class B2WorldCreator {
             goombas.add(new Numbers(screen,rect.getX()/MainClass.PPM, rect.getY()/MainClass.PPM));//put all code that was in here in interactive tile object
         }
 
-        planks = new Array<TowerPlanks>();
+        planks = new Array<Plank>();
         for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            planks.add(new TowerPlanks(screen,rect.getX()/MainClass.PPM, rect.getY()/MainClass.PPM));//put all the code in side coin class
+
+
+            planks.add(new Plank(screen,rect.getX()/MainClass.PPM, rect.getY()/MainClass.PPM,object));//put all the code in side coin class
+
+
 
 
         }
@@ -126,7 +129,8 @@ public class B2WorldCreator {
         return goombas;
     }
 
-    public Array<TowerPlanks> getPlanks() {
+    public Array<Plank> getPlanks() {
+
         return planks;
     }
 }
