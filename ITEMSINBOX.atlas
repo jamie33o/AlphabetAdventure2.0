@@ -1,0 +1,20 @@
+
+ITEMSINBOX.png
+size: 2048, 128
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+mainletters
+  rotate: false
+  xy: 2, 42
+  size: 1024, 64
+  orig: 1024, 64
+  offset: 0, 0
+  index: -1
+powerUp
+  rotate: false
+  xy: 1028, 2
+  size: 100, 104
+  orig: 100, 104
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,83 @@
+
+ITEMSINBOX2.png
+size: 1024, 64
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+a_going_forward
+  rotate: false
+  xy: 67, 5
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+a_standing
+  rotate: false
+  xy: 457, 5
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+b_going_forward
+  rotate: false
+  xy: 262, 5
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+b_standing
+  rotate: false
+  xy: 132, 5
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+c_goin_forward
+  rotate: false
+  xy: 327, 5
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+c_stopped
+  rotate: false
+  xy: 2, 5
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+d_goin_forward
+  rotate: false
+  xy: 587, 5
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+d_stopped
+  rotate: false
+  xy: 522, 5
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+e_goin_forward
+  rotate: false
+  xy: 197, 5
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+e_stopped
+  rotate: false
+  xy: 392, 5
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+powerUp
+  rotate: false
+  xy: 652, 2
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1

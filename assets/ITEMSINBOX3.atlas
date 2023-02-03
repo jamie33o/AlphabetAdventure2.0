@@ -1,0 +1,125 @@
+
+ITEMSINBOX3.png
+size: 1024, 128
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+a_going_forward
+  rotate: false
+  xy: 679, 64
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+a_standing
+  rotate: false
+  xy: 679, 5
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+b_going_forward
+  rotate: false
+  xy: 874, 64
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+b_standing
+  rotate: false
+  xy: 744, 64
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+brokenplank
+  rotate: false
+  xy: 410, 21
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+c_goin_forward
+  rotate: false
+  xy: 939, 64
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+c_stopped
+  rotate: false
+  xy: 614, 64
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+catapultarmdown
+  rotate: false
+  xy: 104, 21
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+catapultarmflat
+  rotate: false
+  xy: 308, 21
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+catapultarmup
+  rotate: false
+  xy: 2, 21
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+catapultbase
+  rotate: false
+  xy: 512, 21
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+crackedplank
+  rotate: false
+  xy: 206, 21
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+d_goin_forward
+  rotate: false
+  xy: 809, 5
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+d_stopped
+  rotate: false
+  xy: 744, 5
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+e_goin_forward
+  rotate: false
+  xy: 809, 64
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+e_stopped
+  rotate: false
+  xy: 614, 5
+  size: 63, 57
+  orig: 63, 57
+  offset: 0, 0
+  index: -1
+powerUp
+  rotate: false
+  xy: 874, 2
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
