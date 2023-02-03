@@ -2,6 +2,7 @@ package com.example.alphabetadventure.tools;
 
 import static com.example.alphabetadventure.screens.PlayScreen.gamePort;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -18,6 +20,9 @@ import com.badlogic.gdx.utils.Array;
 import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.screens.PlayScreen;
 import com.example.alphabetadventure.sprites.endoflevel.Plank;
+import com.example.alphabetadventure.sprites.items.ItemDef;
+import com.example.alphabetadventure.sprites.items.NextLetter;
+import com.example.alphabetadventure.sprites.items.PowerUp;
 import com.example.alphabetadventure.sprites.tileobjects.PowerUpBox;
 import com.example.alphabetadventure.sprites.enemies.Numbers;
 import com.example.alphabetadventure.sprites.tileobjects.NextLetterBox;
@@ -25,6 +30,7 @@ import com.example.alphabetadventure.sprites.tileobjects.NextLetterBox;
 public class B2WorldCreator {
     Polygon poly;
     float[] vertices;
+    TextureRegion region;
 
     private Array<Plank> planks;
 
@@ -40,7 +46,6 @@ public class B2WorldCreator {
         Body body;
 
         MapProperties vertexString = map.getProperties();
-
         //creates body for each part of the ground
         for(MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
@@ -111,13 +116,14 @@ public class B2WorldCreator {
             goombas.add(new Numbers(screen,rect.getX()/MainClass.PPM, rect.getY()/MainClass.PPM));//put all code that was in here in interactive tile object
         }
 
+        int i = 0;
         planks = new Array<Plank>();
         for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
 
+          planks.add(new Plank(screen,rect.getX()/MainClass.PPM, rect.getY()/MainClass.PPM,object));//put all the code in side coin class
 
-            planks.add(new Plank(screen,rect.getX()/MainClass.PPM, rect.getY()/MainClass.PPM,object));//put all the code in side coin class
 
 
 

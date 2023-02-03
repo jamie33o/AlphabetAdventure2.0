@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 
@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.screens.PlayScreen;
 import com.example.alphabetadventure.sprites.Letter;
+import com.example.alphabetadventure.tools.B2WorldCreator;
 
 
 public class Plank extends TowerPlanks {
@@ -23,17 +24,22 @@ public class Plank extends TowerPlanks {
 
     private boolean setToDestroy;
     private boolean destroyed;
-    TextureRegion region;
+    TextureRegion region,region1;
+    B2WorldCreator b2w;
     public Plank(PlayScreen screen, float x, float y, MapObject object) {
         super(screen, x, y,object);
         this.bounds=((RectangleMapObject) object).getRectangle();
 
-        region = new TextureRegion(screen.getAtlas().findRegion("crackedplank"),0,0,100,100);
-        setBounds(bounds.getX(), bounds.getY(), 40 / MainClass.PPM, 60 / MainClass.PPM);//setbounds is set to let know how large to render letter on screen
+        if(object.getProperties().containsKey("rotated")) {
+            this.region = new TextureRegion(screen.getAtlas().findRegion("flatplank"), -6, 14, 150, 70);
+        }else {
+            this.region = new TextureRegion(screen.getAtlas().findRegion("verticalplank"), 0, 0, 100, 100);
+        }
 
 
-        velocity = new Vector2(0.7f,0);//sets movement
-        this.bounds=((RectangleMapObject) object).getRectangle();
+
+        // b2w =new B2WorldCreator(screen);
+
 
 
 
@@ -59,24 +65,26 @@ public class Plank extends TowerPlanks {
 
         shape.setAsBox(bounds.getWidth()/2/MainClass.PPM,bounds.getHeight()/2/MainClass.PPM);
         fdef.shape = shape;
-        fdef.density = 1.0f;//density of fixture
+        fdef.density = 0.1f;//density of fixture
         fdef.restitution = 0.5f;
         fdef.friction = 0.5f;
 
         b2body.createFixture(fdef).setUserData(this);
 
         MassData massData = new MassData();
-        massData.mass = 1f; // Set the mass/weight of the body
+
+        massData.mass = fdef.density * 2 * 2;//creates the rotation when hit
+        massData.I = massData.mass * (2 *2 + 2 * 2) / 12.0f;
         b2body.setMassData(massData);
 
-
+        shape.dispose();
     }
 
     public void update(float dt) {
         stateTime += dt;
 
 
-        setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
+
         setRegion(region);
 
 
@@ -84,15 +92,21 @@ public class Plank extends TowerPlanks {
 
     public void draw(Batch batch){
         super.draw(batch);
+
+        // makes planks rotate with the fixture
+        batch.draw(region, b2body.getPosition().x - region.getRegionWidth() / 2/MainClass.PPM, b2body.getPosition().y - region.getRegionHeight() / 2/MainClass.PPM,
+                region.getRegionWidth() / 2/ MainClass.PPM, region.getRegionHeight() / 2/ MainClass.PPM,
+                region.getRegionWidth()/MainClass.PPM, region.getRegionHeight()/MainClass.PPM,
+                0.7f, 0.67f, b2body.getAngle() * MathUtils.radiansToDegrees);
+
     }
 
     public void onHit(){
       //  b2body.applyLinearImpulse(new Vector2(5, 4),b2body.getWorldCenter(), true);
 
        // b2body.applyTorque(500, true);
-        b2body.setAngularDamping(71);
-    }
 
+    }
 
     @Override
     public void use(Letter letter) {

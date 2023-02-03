@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -57,10 +58,10 @@ public class PlayScreen implements Screen {
     private Array<Item> items;//array of all item in game world
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;//item definitions
 
-
+Plank plank;
 
     public PlayScreen(MainClass game){
-        atlas = new TextureAtlas("ITEMSINBOX3.atlas");
+        atlas = new TextureAtlas("MainAtlas.atlas");
 
 
         this.game = game;//brings in game class
@@ -159,6 +160,8 @@ public class PlayScreen implements Screen {
                 enemy.b2body.setActive(true);//wakes enemy up when player comes close
         }
         for(Plank planks: creator.getPlanks()) {
+
+
             planks.update(dt);
 
         }
@@ -230,11 +233,13 @@ public class PlayScreen implements Screen {
         }
 
 
+
         for(Enemy enemy: creator.getGoombas()) {//draws all enemies
 
             enemy.draw(game.batch);
         }
         for(Plank planks: creator.getPlanks()) {
+
             planks.draw(game.batch);
 
         }
