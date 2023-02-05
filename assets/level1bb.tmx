@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="472" height="21" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="133">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="472" height="21" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="149">
  <tileset firstgid="1" name="newtileset2" tilewidth="16" tileheight="16" tilecount="1911" columns="49">
   <image source="newtileset2.png" width="784" height="628"/>
  </tileset>
@@ -209,6 +209,17 @@
   </object>
  </objectgroup>
  <objectgroup id="16" name="catapult">
-  <object id="132" x="6864" y="256" width="64" height="48"/>
+  <object id="146" x="6893" y="255">
+   <properties>
+    <property name="catapultarm" value=""/>
+   </properties>
+   <polygon points="0,0 -43.2289,1 -60.1446,8 -78,-1 -70.4819,15"/>
+  </object>
+  <object id="148" x="6893" y="252">
+   <properties>
+    <property name="catapultbase" value=""/>
+   </properties>
+   <polygon points="0,0 -44,50 36,50"/>
+  </object>
  </objectgroup>
 </map>

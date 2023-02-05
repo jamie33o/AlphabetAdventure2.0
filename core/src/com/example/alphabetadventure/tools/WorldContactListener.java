@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.sprites.Letter;
+import com.example.alphabetadventure.sprites.endoflevel.Catapult;
 import com.example.alphabetadventure.sprites.endoflevel.Plank;
 import com.example.alphabetadventure.sprites.enemies.Enemy;
 import com.example.alphabetadventure.sprites.items.NextLetter;
@@ -134,7 +135,13 @@ public class WorldContactListener implements ContactListener {
                     ((Plank) fixb.getUserData()).onHit();
                   //  ((Plank) fixb.getUserData()).flip(true,false);
                 }
-
+                break;
+            case MainClass.LETTER_BIT | MainClass.CATAPULT_ARM_BIT: //if mario collides with item
+                if(fixA.getFilterData().categoryBits == MainClass.CATAPULT_ARM_BIT)//is fixture a the collected item
+                    ((Catapult)fixA.getUserData()).use((Letter) fixb.getUserData());//if its then we use on letter
+                else
+                    ((Catapult)fixb.getUserData()).use((Letter) fixA.getUserData());//other wise fixture fixb must be item then we want to use it on fix a wich must be letter
+                break;
 
         }
 

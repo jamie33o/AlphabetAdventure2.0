@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
@@ -29,17 +30,21 @@ public abstract class TowerPlanks extends Sprite {
     protected Body body;
     protected MapObject object;
     protected Rectangle bounds;
-
+protected Rectangle bounds1;
     public TowerPlanks(PlayScreen screen, float x, float y,MapObject object) {
         this.object = object;
         this.screen = screen;
         this.world = screen.getWorld();
         toDestroy = false;
         destroyed = false;
-        this.bounds=((RectangleMapObject) object).getRectangle();
 
-      //  setPosition(x, y);
-     //   setBounds(getX(), getY(), 30 / MainClass.PPM, 30 / MainClass.PPM);//size of item in box
+        if (object instanceof RectangleMapObject) {
+            this.bounds=((RectangleMapObject) object).getRectangle();
+        } else if (object instanceof PolygonMapObject) {
+            this.bounds=((PolygonMapObject) object).getPolygon().getBoundingRectangle();
+        }
+       //  setPosition(x, y);
+      //  setBounds(getX(), getY(), 30 / MainClass.PPM, 30 / MainClass.PPM);//size of item in box
         defineItem();
     }
 
@@ -51,8 +56,8 @@ public abstract class TowerPlanks extends Sprite {
 
     public void update(float dt) {
         if (toDestroy && !destroyed) {//
-            world.destroyBody(body);
-            destroyed = true;
+         //   world.destroyBody(body);
+           // destroyed = true;
         }
     }
 

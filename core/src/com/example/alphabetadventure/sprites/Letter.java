@@ -202,7 +202,7 @@ public TextureRegion getFrame(float dt){
 
     public void defineLetter(){
         BodyDef bdef =new BodyDef();
-        bdef.position.set(6662/ MainClass.PPM,32/ MainClass.PPM);//use to set start position on map
+        bdef.position.set(6962/ MainClass.PPM,32/ MainClass.PPM);//use to set start position on map
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
@@ -221,7 +221,9 @@ public TextureRegion getFrame(float dt){
                 MainClass.OBJECT_BIT|
                 MainClass.ENEMY_HEAD_BIT|
                 MainClass.ENEMY_BIT|
-                MainClass.NEXTLETTER_BIT;
+                MainClass.NEXTLETTER_BIT|
+                MainClass.CATAPULT_BASE_BIT|
+                        MainClass.CATAPULT_ARM_BIT;
 
 
 

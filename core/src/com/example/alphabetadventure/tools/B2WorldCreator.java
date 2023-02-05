@@ -10,7 +10,6 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -19,22 +18,22 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.screens.PlayScreen;
+import com.example.alphabetadventure.sprites.endoflevel.Catapult;
 import com.example.alphabetadventure.sprites.endoflevel.Plank;
-import com.example.alphabetadventure.sprites.items.ItemDef;
-import com.example.alphabetadventure.sprites.items.NextLetter;
-import com.example.alphabetadventure.sprites.items.PowerUp;
 import com.example.alphabetadventure.sprites.tileobjects.PowerUpBox;
 import com.example.alphabetadventure.sprites.enemies.Numbers;
 import com.example.alphabetadventure.sprites.tileobjects.NextLetterBox;
 
 public class B2WorldCreator {
     Polygon poly;
-    float[] vertices;
     TextureRegion region;
-
+    Polygon poly1;
+    Polygon poly2;
     private Array<Plank> planks;
-
-    private Array<Numbers> goombas;
+    private Array<Catapult> catapult;
+    public float[] vertices;
+    public static float[]  armVertices = null, baseVertices = null;
+    private Array<Numbers> numbersArray;
     public B2WorldCreator(PlayScreen screen){
        World world = screen.getWorld();
        TiledMap map = screen.getMap();
@@ -109,14 +108,14 @@ public class B2WorldCreator {
           new PowerUpBox(screen,object);//put all code that was in here in interactive tile object
         }
         //create all goombas
-        goombas = new Array<Numbers>();
+        numbersArray = new Array<Numbers>();
         for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            goombas.add(new Numbers(screen,rect.getX()/MainClass.PPM, rect.getY()/MainClass.PPM));//put all code that was in here in interactive tile object
+            numbersArray.add(new Numbers(screen,rect.getX()/MainClass.PPM, rect.getY()/MainClass.PPM));//put all code that was in here in interactive tile object
         }
 
-        int i = 0;
+
         planks = new Array<Plank>();
         for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
@@ -130,13 +129,68 @@ public class B2WorldCreator {
 
         }
 
+
+        catapult = new Array<Catapult>();
+        for(PolygonMapObject object : map.getLayers().get(8).getObjects().getByType(PolygonMapObject.class)){
+
+
+            if( object.getProperties().containsKey("catapultbase")) {
+
+                poly2 = object.getPolygon();
+                baseVertices = poly2.getVertices();
+                for (int i = 0; i < baseVertices.length; i++) {//resizes the triangle/ramp t
+                    if (i % 2 == 0) {
+                        baseVertices[i] = baseVertices[i] * gamePort.getWorldWidth() / MainClass.V_WIDTH;
+                    } else {
+                        baseVertices[i] = baseVertices[i] * gamePort.getWorldHeight() / MainClass.V_HEIGHT;
+                    }
+                }
+
+            }else if(object.getProperties().containsKey("catapultarm") ){
+
+                poly1 = object.getPolygon();
+
+                armVertices = poly1.getVertices();
+                for (int i = 0; i < armVertices.length; i++) {//resizes the triangle/ramp t
+                    if (i % 2 == 0) {
+                        armVertices[i] = armVertices[i] * gamePort.getWorldWidth() / MainClass.V_WIDTH;
+                    } else {
+                        armVertices[i] = armVertices[i] * gamePort.getWorldHeight() / MainClass.V_HEIGHT;
+                    }
+                }
+
+            }
+
+            if(armVertices != null && baseVertices != null)
+                catapult.add(new Catapult(screen, poly2.getX() /  MainClass.PPM, poly2.getY() /MainClass.PPM,object));//put all the code in side coin class
+
+        }
+
+
+
+
     }
-    public Array<Numbers> getGoombas() {
-        return goombas;
+    public Array<Numbers> getNumbersArray() {
+        return numbersArray;
     }
 
     public Array<Plank> getPlanks() {
 
         return planks;
     }
+
+
+public static float[] getArmVertices(){
+        return armVertices;
+}
+
+
+    public static float[] getBaseVertices(){
+        return baseVertices;
+    }
+    public Array<Catapult> getCatapult() {
+
+        return catapult;
+    }
+
 }

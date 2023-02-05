@@ -5,24 +5,21 @@ import static com.example.alphabetadventure.sprites.Letter.letterCounter;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.scenes.Hud;
+import com.example.alphabetadventure.sprites.endoflevel.Catapult;
 import com.example.alphabetadventure.sprites.endoflevel.Plank;
 import com.example.alphabetadventure.sprites.enemies.Enemy;
 import com.example.alphabetadventure.sprites.Letter;
@@ -54,7 +51,6 @@ public class PlayScreen implements Screen {
     public Letter player;
 
     private TextureAtlas atlas;
-
     private Array<Item> items;//array of all item in game world
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;//item definitions
 
@@ -154,11 +150,20 @@ Plank plank;
 
         player.update(dt);//updates the letter
 
-        for(Enemy enemy: creator.getGoombas()) {
+        for(Enemy enemy: creator.getNumbersArray()) {
             enemy.update(dt);
             if (enemy.getX() < player.getX() + 424 / MainClass.PPM) //224 is 14 16px tiles when player 14 tiles away enemy wakes
                 enemy.b2body.setActive(true);//wakes enemy up when player comes close
         }
+
+        for(Catapult catapult: creator.getCatapult()) {
+
+
+            catapult.update(dt);
+
+        }
+
+
         for(Plank planks: creator.getPlanks()) {
 
 
@@ -234,10 +239,20 @@ Plank plank;
 
 
 
-        for(Enemy enemy: creator.getGoombas()) {//draws all enemies
+        for(Enemy enemy: creator.getNumbersArray()) {//draws all enemies
 
             enemy.draw(game.batch);
         }
+
+        for(Catapult catapult: creator.getCatapult()) {
+
+
+            catapult.draw(game.batch);
+
+        }
+
+
+
         for(Plank planks: creator.getPlanks()) {
 
             planks.draw(game.batch);

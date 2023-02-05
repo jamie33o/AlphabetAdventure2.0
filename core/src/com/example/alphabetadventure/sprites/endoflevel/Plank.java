@@ -24,21 +24,17 @@ public class Plank extends TowerPlanks {
 
     private boolean setToDestroy;
     private boolean destroyed;
-    TextureRegion region,region1;
+    TextureRegion region;
     B2WorldCreator b2w;
     public Plank(PlayScreen screen, float x, float y, MapObject object) {
         super(screen, x, y,object);
         this.bounds=((RectangleMapObject) object).getRectangle();
 
         if(object.getProperties().containsKey("rotated")) {
-            this.region = new TextureRegion(screen.getAtlas().findRegion("flatplank"), -6, 14, 150, 70);
+            region = new TextureRegion(screen.getAtlas().findRegion("flatplank"), -6, 14, 150, 70);
         }else {
-            this.region = new TextureRegion(screen.getAtlas().findRegion("verticalplank"), 0, 0, 100, 100);
+            region = new TextureRegion(screen.getAtlas().findRegion("verticalplank"), 0, 0, 100, 100);
         }
-
-
-
-        // b2w =new B2WorldCreator(screen);
 
 
 
@@ -49,8 +45,8 @@ public class Plank extends TowerPlanks {
     public void defineItem() {
 
         BodyDef bdef =new BodyDef();
-        bdef.type = BodyDef.BodyType.DynamicBody;
         bdef.position.set((bounds.getX() + bounds.getWidth()/2)/ MainClass.PPM, (bounds.getY() + bounds.getHeight()/2)/MainClass.PPM);
+        bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
 
@@ -81,7 +77,7 @@ public class Plank extends TowerPlanks {
     }
 
     public void update(float dt) {
-        stateTime += dt;
+       // stateTime += dt;
 
 
 
