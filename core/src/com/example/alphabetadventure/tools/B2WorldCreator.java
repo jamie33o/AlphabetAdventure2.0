@@ -123,17 +123,11 @@ public class B2WorldCreator {
 
           planks.add(new Plank(screen,rect.getX()/MainClass.PPM, rect.getY()/MainClass.PPM,object));//put all the code in side coin class
 
-
-
-
-
         }
 
 
         catapult = new Array<Catapult>();
         for(PolygonMapObject object : map.getLayers().get(8).getObjects().getByType(PolygonMapObject.class)){
-
-
             if( object.getProperties().containsKey("catapultbase")) {
 
                 poly2 = object.getPolygon();
@@ -162,7 +156,7 @@ public class B2WorldCreator {
             }
 
             if(armVertices != null && baseVertices != null)
-                catapult.add(new Catapult(screen, poly2.getX() /  MainClass.PPM, poly2.getY() /MainClass.PPM,object));//put all the code in side coin class
+                catapult.add(new Catapult(screen, poly1.getX() /  MainClass.PPM, poly1.getY() /MainClass.PPM,object));//put all the code in side coin class
 
         }
 

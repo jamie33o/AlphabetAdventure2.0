@@ -1,7 +1,5 @@
 package com.example.alphabetadventure.sprites.items;
 
-import static com.example.alphabetadventure.sprites.Letter.letterCounter;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -13,24 +11,18 @@ import com.example.alphabetadventure.sprites.Letter;
 
 public class NextLetter extends Item{
 
-    String[] lettersInBox;//todo turn empty box into power up box
-    public Letter playerInBox;
     TextureRegion region;
     private boolean runningRight;
 
+    Letter letter;
+
+    int nextLetterCounter;
     public NextLetter(PlayScreen screen, float x, float y) {
         super(screen, x, y);
+        letter = new Letter(screen);
 
-        lettersInBox = new String[]{"a_going_forward", "b_going_forward","c_goin_forward","d_goin_forward","e_goin_forward"};
-
-        region = new TextureRegion(screen.getAtlas().findRegion(lettersInBox[letterCounter+1]),0,0,60,53);
-      //  setBounds(getX(), getY(), 30 / MainClass.PPM, 30 / MainClass.PPMz);//setbounds is set to let know how large to render letter on screen
-        //setRegion(lettersInBox[0]);
-                 setRegion(region);
-    velocity = new Vector2(0.7f,0);//sets movement
-
-        playerInBox = new Letter(screen);//created a new letter object here to get lettercounter so i didnt have to make anything static
-
+        velocity = new Vector2(0.7f,0);//sets movement
+        //todo use getter
     }
 
     @Override
@@ -57,18 +49,30 @@ public class NextLetter extends Item{
     @Override
     public void use(Letter letter) {
         destroy();
-        playerInBox.updateLetterCounter();//created letter object called it lettercounter to update lettercounter
+
+        letter.setLetterCounter(letter.getLetterCounter()+1);
+
+        if(letter.getLetterCounter() >= letter.lettersMoving.length){
+            letter.setLetterCounter(0);
+
+
+        }
     }
 
     @Override
     public void update(float dt){
         super.update(dt);
         setPosition(body.getPosition().x - getWidth() / 2 , body.getPosition().y - getHeight() / 2);
+        if(Letter.getLetterCounter() <= letter.lettersMoving.length-1) {
+            setRegion(letter.lettersMoving[Letter.getLetterCounter() + 1]);
+        }else {
+            setRegion(letter.lettersMoving[1]);
+//todo end game on last letter
+        }
+
 
         velocity.y = body.getLinearVelocity().y;//sets movent of item from box
         body.setLinearVelocity(velocity);
-
-
 
     }
 

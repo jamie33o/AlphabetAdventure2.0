@@ -50,7 +50,6 @@ public class PowerUpBox extends InterActiveTileObject {
 
         }  else {
 
-
             //MainClass.manager.get("breakblock.filepath", Sound.class).play();
 
             // MainClass.manager.get("bump.filepath", Sound.class).play();

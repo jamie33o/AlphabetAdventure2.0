@@ -1,7 +1,7 @@
 package com.example.alphabetadventure.screens;
 
 
-import static com.example.alphabetadventure.sprites.Letter.letterCounter;
+
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -20,9 +20,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.scenes.Hud;
 import com.example.alphabetadventure.sprites.endoflevel.Catapult;
+import com.example.alphabetadventure.sprites.endoflevel.FireBall;
 import com.example.alphabetadventure.sprites.endoflevel.Plank;
 import com.example.alphabetadventure.sprites.enemies.Enemy;
 import com.example.alphabetadventure.sprites.Letter;
+
 import com.example.alphabetadventure.sprites.items.NextLetter;
 import com.example.alphabetadventure.sprites.items.Item;
 import com.example.alphabetadventure.sprites.items.ItemDef;
@@ -41,6 +43,7 @@ public class PlayScreen implements Screen {
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
+    private Array<FireBall> fireballs;
 
     //Box2d Variables
     private World world;
@@ -50,11 +53,13 @@ public class PlayScreen implements Screen {
     //Sprites
     public Letter player;
 
+
+
     private TextureAtlas atlas;
     private Array<Item> items;//array of all item in game world
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;//item definitions
 
-Plank plank;
+
 
     public PlayScreen(MainClass game){
         atlas = new TextureAtlas("MainAtlas.atlas");
@@ -74,7 +79,7 @@ Plank plank;
 
 
         //world creates gravity
-        world = new World(new Vector2(0,-200 / MainClass.PPM),true);
+        world = new World(new Vector2(0,-200 / MainClass.PPM),true);//sets the gravity
         b2dr = new Box2DDebugRenderer();//creates lines around objects
 
         creator = new B2WorldCreator(this);
@@ -83,8 +88,10 @@ Plank plank;
 
         world.setContactListener(new WorldContactListener());
 
-        items = new Array<Item>();
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
+
+        items = new Array<Item>();
+        fireballs = new Array<FireBall>();
 
 
     }
@@ -128,12 +135,8 @@ Plank plank;
             if(Gdx.input.isTouched(1) && player.b2body.getLinearVelocity().y <2&& player.getY() < 0.4 ||Gdx.input.isTouched() && Gdx.input.getX()> gamePort.getScreenWidth()/1.3&&player.b2body.getLinearVelocity().y <2&& player.getY() < 0.4 )
                 player.jump();
 
-
-
-
-
-       /*     if (Gdx.input.isTouched(1)) {
-                // player.fire();
+          /* if (Gdx.input.isTouched(2)) {
+                fire();
 
             }*/
         }
@@ -142,9 +145,9 @@ Plank plank;
 
 
     public void update(float dt){
+        handleSpawnedItems();
 
         handleInput(dt);//updates the input keep at top
-      handleSpawnedItems();
        //takes 1 step in the physics simulation (60 times a second)
         world.step(1/60f,6,2);
 
@@ -157,16 +160,12 @@ Plank plank;
         }
 
         for(Catapult catapult: creator.getCatapult()) {
-
-
             catapult.update(dt);
 
         }
 
 
         for(Plank planks: creator.getPlanks()) {
-
-
             planks.update(dt);
 
         }
@@ -174,13 +173,12 @@ Plank plank;
             item.update(dt);
 
         }
-
-
-
+        for(FireBall ball : fireballs) {
+            ball.update(dt);
+            if(ball.isDestroyed())
+                fireballs.removeValue(ball, true);
+        }
             hud.update(dt);
-
-
-
 
         //attach our gamecam to our player.x coordinate stops camera moving
         if(player.currentState != Letter.State.DEAD){
@@ -193,8 +191,6 @@ Plank plank;
 
     }
 
-
-
     @Override
     public void render(float delta) {
         update(delta);
@@ -202,9 +198,7 @@ Plank plank;
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);//clears  screen between frames
 
-
         renderer.render();
-
         b2dr.render(world, gamecam.combined);//game.combined projection matrixs for it
 
         //render letter to screen
@@ -217,16 +211,16 @@ Plank plank;
             float x;
             float y;
 
-            for(int i =0 ; i <= letterCounter; i++){
+            for(int i =0 ; i <= player.getLetterCounter(); i++){
 
-                if(i <= letterCounter/2) {
+                if(i <= player.getLetterCounter()/2) {
                     x = player.getX() +player.getWidth() * i;
                     y = player.getY() +player.getHeight() * i;
                     game.batch.draw(player.lettersStopped[i], x, y, player.getWidth(), player.getHeight()); // draw the letter
 
                 }else{
-                    float z = player.getX() - player.getWidth() * (i- letterCounter/2);
-                    float c = player.getY() +player.getHeight() * (i- letterCounter/2);
+                    float z = player.getX() - player.getWidth() * (i- player.getLetterCounter()/2);
+                    float c = player.getY() +player.getHeight() * (i- player.getLetterCounter()/2);
                     game.batch.draw(player.lettersStopped[i], z, c, player.getWidth(), player.getHeight()); // draw the letter
 
                 }
@@ -250,7 +244,8 @@ Plank plank;
             catapult.draw(game.batch);
 
         }
-
+        for(FireBall ball : fireballs)
+            ball.draw(game.batch);
 
 
         for(Plank planks: creator.getPlanks()) {
@@ -277,10 +272,15 @@ Plank plank;
 
     }
 
+    public void fire(){
+        fireballs.add(new FireBall(this, player.getX(), player.getY(), true));
+    }
+
+
     public boolean gameOver(){
         if(player.currentState == Letter.State.DEAD && player.getStateTimer() > 5){
 
-            letterCounter =0;
+            player.setLetterCounter(0);
 
             return true;
 
@@ -324,6 +324,7 @@ Plank plank;
         world.dispose();
         b2dr.dispose();
         hud.dispose();
+
 
 
     }

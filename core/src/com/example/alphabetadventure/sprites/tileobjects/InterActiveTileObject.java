@@ -31,7 +31,7 @@ public abstract class InterActiveTileObject {
     protected PlayScreen screen;
 protected MapObject object;
     public InterActiveTileObject(PlayScreen screen, MapObject object){
-       this.object = object;
+        this.object = object;
         this.screen = screen;
         this.world = screen.getWorld();
         this.map = screen.getMap();

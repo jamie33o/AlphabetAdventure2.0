@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.sprites.Letter;
 import com.example.alphabetadventure.sprites.endoflevel.Catapult;
+import com.example.alphabetadventure.sprites.endoflevel.FireBall;
 import com.example.alphabetadventure.sprites.endoflevel.Plank;
 import com.example.alphabetadventure.sprites.enemies.Enemy;
 import com.example.alphabetadventure.sprites.items.NextLetter;
@@ -102,23 +103,23 @@ public class WorldContactListener implements ContactListener {
             case MainClass.POWER_UP_BIT | MainClass.OBJECT_BIT: //mario collides with enemy head
                 if (fixA.getFilterData().categoryBits == MainClass.POWER_UP_BIT) {//then we know fixa is enemy
                     ((PowerUp) fixA.getUserData()).reverseVelocity(true, false);//
-                   // ((PowerUp) fixA.getUserData()).flip(true,false);
+                    // ((PowerUp) fixA.getUserData()).flip(true,false);
                 } else{
                     ((PowerUp) fixb.getUserData()).reverseVelocity(true, false);
-                   // ((PowerUp) fixb.getUserData()).flip(true,false);
+                    // ((PowerUp) fixb.getUserData()).flip(true,false);
                 }
                 break;
             case MainClass.POWER_UP_BIT | MainClass.LETTER_BIT: //if mario collides with item
 
-                 if(fixA.getFilterData().categoryBits == MainClass.POWER_UP_BIT) {//is fixture a the collected item
-                     //remove the power up img
+                if(fixA.getFilterData().categoryBits == MainClass.POWER_UP_BIT) {//is fixture a the collected item
+                    //remove the power up img
                     ((PowerUp) fixA.getUserData()).use((Letter) fixb.getUserData());//if its then we use on letter
 
                 } else {
                     ((PowerUp) fixb.getUserData()).use((Letter) fixA.getUserData());//other wise fixture fixb must be item then we want to use it on fix a wich must be letter
-                 }
+                }
 
-                 //makes letter speed up
+                //makes letter speed up
                 if(fixA.getFilterData().categoryBits == MainClass.LETTER_BIT){
                     ((Letter) fixA.getUserData()).speedUp();//if its then we use on letter
                 }else
@@ -130,25 +131,32 @@ public class WorldContactListener implements ContactListener {
             case MainClass.LETTER_BIT | MainClass.PLANKS_BIT: //mario collides with enemy head
                 if (fixA.getFilterData().categoryBits == MainClass.PLANKS_BIT) {//then we know fixa is enemy
                     ((Plank) fixA.getUserData()).onHit();//
-                   // ((Plank) fixA.getUserData()).flip(true,false);
+                    // ((Plank) fixA.getUserData()).flip(true,false);
                 } else{
                     ((Plank) fixb.getUserData()).onHit();
-                  //  ((Plank) fixb.getUserData()).flip(true,false);
+                    //  ((Plank) fixb.getUserData()).flip(true,false);
                 }
                 break;
             case MainClass.LETTER_BIT | MainClass.CATAPULT_ARM_BIT: //if mario collides with item
                 if(fixA.getFilterData().categoryBits == MainClass.CATAPULT_ARM_BIT)//is fixture a the collected item
                     ((Catapult)fixA.getUserData()).use((Letter) fixb.getUserData());//if its then we use on letter
+
                 else
                     ((Catapult)fixb.getUserData()).use((Letter) fixA.getUserData());//other wise fixture fixb must be item then we want to use it on fix a wich must be letter
                 break;
-
+            case MainClass.FIREBALL_BIT | MainClass.PLANKS_BIT:
+                if(fixA.getFilterData().categoryBits == MainClass.FIREBALL_BIT)
+                    ((FireBall)fixA.getUserData()).setToDestroy();
+                else
+                    ((FireBall)fixb.getUserData()).setToDestroy();
+                break;
         }
 
-
-
-
     }
+
+
+
+
 
     @Override
     public void endContact(Contact contact) {//when objects end contacting

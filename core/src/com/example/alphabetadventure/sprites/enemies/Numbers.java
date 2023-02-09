@@ -16,18 +16,21 @@ import com.example.alphabetadventure.sprites.Letter;
 public class Numbers extends Enemy {
 
     private float stateTime;//used to keep track of it
-    private Animation<TextureRegion> walkAnimation;
-    private Array<TextureRegion> frames;
-
-    TextureRegion goomba;
+    private TextureRegion[] numbersArray;
+    TextureRegion one_goingforward,two_goingforward,three_goingforward;
     private boolean setToDestroy;
     private boolean destroyed;
     public Numbers(PlayScreen screen, float x, float y) {
         super(screen, x, y);
-        frames = new Array<TextureRegion>();//makes goomba look like he is walking
-        for (int i = 0; i < 1; i++) {
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("c_goin_forward"), 0, 0, 50, 55));
-            walkAnimation = new Animation(0.4f, frames);
+
+
+        numbersArray = new TextureRegion[]{
+                one_goingforward = new TextureRegion(screen.getAtlas().findRegion("1_goingforward"),0,0,60,53),
+                two_goingforward = new TextureRegion(screen.getAtlas().findRegion("2_goingforward"),0,0,60,53),
+                three_goingforward = new TextureRegion(screen.getAtlas().findRegion("3_goingforward"),0,0,60,53)
+
+        };
+
             stateTime = 0;
             setBounds(getX(), getY(), 33/ MainClass.PPM, 33 / MainClass.PPM);
 
@@ -36,20 +39,24 @@ public class Numbers extends Enemy {
             destroyed = false;
         }
 
-    }
+
 
     public void update(float dt){
         stateTime += dt;
         if(setToDestroy && !destroyed){//used to change goomba image
             world.destroyBody(b2body);
             destroyed = true;
-            setRegion(new TextureRegion(screen.getAtlas().findRegion("c_stopped"), 0, 0, 60, 55));
+            if(Letter.getLetterCounter() <= numbersArray.length) {
+                setRegion(numbersArray[Letter.getLetterCounter()]);
+            }else {
+                setRegion(numbersArray[0]);
+            }
             stateTime = 0;
         }
         else if(!destroyed) {
            b2body.setLinearVelocity(velocity);
             setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
-            setRegion(walkAnimation.getKeyFrame(stateTime, true));
+            setRegion(numbersArray[0]);
         }
     }
 

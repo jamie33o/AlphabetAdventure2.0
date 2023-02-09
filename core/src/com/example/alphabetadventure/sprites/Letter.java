@@ -12,7 +12,6 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.screens.PlayScreen;
 import com.example.alphabetadventure.sprites.enemies.Enemy;
@@ -31,19 +30,29 @@ public class Letter extends Sprite {
 
     public World world;
     public Body b2body;
-    private  TextureRegion  aStopped,bStopped,cStopped, dStopped,eStopped;
-    private  TextureRegion aForward,bForward,cForward,dForward,eForward;
+    private  TextureRegion  aStopped,bStopped,cStopped, dStopped,eStopped,fStopped,gStopped,hStopped;
+    private  TextureRegion aForward,bForward,cForward,dForward,eForward,fForward,gForward,hForward;
     private TextureRegion letterDead;
     private boolean letterIsDead;
 
     public  TextureRegion[] lettersMoving;
-    public  static int letterCounter;
+
+
+
+    private static int letterCounter ;
     public  TextureRegion[] lettersStopped;
     TextureRegion region;
-    public static long time;
-    int i;
     public PlayScreen screen;
-    static long startTime = 0;
+
+
+
+    public static int getLetterCounter() {
+        return letterCounter;
+    }
+
+    public void setLetterCounter(int letterCounter) {
+        this.letterCounter = letterCounter;
+    }
 
 
     public Letter(PlayScreen screen){//put Playscreen screen so it would get atlas
@@ -54,6 +63,7 @@ public class Letter extends Sprite {
         previousState = State.STANDING;
         stateTimer = 0;
         runningRight = true;
+
 
 
        /* Array<TextureRegion> frames = new Array<TextureRegion>();//array to pass the constructor for the animation of letter
@@ -72,8 +82,10 @@ public class Letter extends Sprite {
                 bStopped = new TextureRegion(screen.getAtlas().findRegion("b_going_forward"),0,0,60,53),
                 cStopped = new TextureRegion(screen.getAtlas().findRegion("c_goin_forward"),0,0,60,53),
                 dStopped = new TextureRegion(screen.getAtlas().findRegion("d_goin_forward"),0,0,60,53),
-                eStopped = new TextureRegion(screen.getAtlas().findRegion("e_goin_forward"),0,0,60,53)
-
+                eStopped = new TextureRegion(screen.getAtlas().findRegion("e_goin_forward"),0,0,60,53),
+                fStopped = new TextureRegion(screen.getAtlas().findRegion("f_goingforward"),0,0,60,53),
+                gStopped = new TextureRegion(screen.getAtlas().findRegion("g_goingforward"),0,0,60,53),
+                hStopped = new TextureRegion(screen.getAtlas().findRegion("h_goingforward"),0,0,60,53)
         };
 
         lettersStopped = new TextureRegion[]{
@@ -81,28 +93,20 @@ public class Letter extends Sprite {
                 bForward = new TextureRegion(screen.getAtlas().findRegion("b_standing"),0,0,60,53),
                 cForward = new TextureRegion(screen.getAtlas().findRegion("c_stopped"),0,0,60,53),
                 dForward = new TextureRegion(screen.getAtlas().findRegion("d_stopped"),0,0,60,53),
-                eForward = new TextureRegion(screen.getAtlas().findRegion("e_stopped"),0,0,60,53)
+                eForward = new TextureRegion(screen.getAtlas().findRegion("e_stopped"),0,0,60,53),
+                fForward = new TextureRegion(screen.getAtlas().findRegion("f_standin"),0,0,60,53),
+                gForward = new TextureRegion(screen.getAtlas().findRegion("g_standing"),0,0,60,53),
+                hForward = new TextureRegion(screen.getAtlas().findRegion("h_standing"),0,0,60,53)
+
+
+
+
 
         };
 
 
-
-
-
-
-
-        //get jump animation frames and add them to marioJump Animation
-       // marioJump = new TextureRegion(screen.getAtlas().findRegion("little_mario"), 80, 0, 16, 16);
-       // bigMarioJump = new TextureRegion(screen.getAtlas().findRegion("big_mario"), 80, 0, 16, 32);
-
-        //create texture region for mario standing
-       // bigMarioStand = new TextureRegion(screen.getAtlas().findRegion("big_mario"), 0, 0, 16, 32);
-
         //create dead mario texture region
         letterDead = new TextureRegion(screen.getAtlas().findRegion("a_going_forward"), 0, 0, 50, 50);
-
-
-
 
 
         defineLetter();           //in the atlas x is top left y is top left then width and height of image
@@ -110,13 +114,7 @@ public class Letter extends Sprite {
         setRegion(aStopped);
     }
 
-    public void updateLetterCounter() {
-        letterCounter++;
-        if (letterCounter >= lettersMoving.length) {
-            letterCounter = 0;
-        }
 
-    }
 
 
     public void update(float dt){
@@ -126,6 +124,8 @@ public class Letter extends Sprite {
         if(b2body.getPosition().y < 0 )
             die();
     }
+
+
 public TextureRegion getFrame(float dt){
         currentState = getState();
 
@@ -135,15 +135,15 @@ public TextureRegion getFrame(float dt){
                 region = lettersStopped[0];
                 break;
             case JUMPING:
-                region = (TextureRegion) letterJump.getKeyFrame(stateTimer);
+                region =  lettersMoving[getLetterCounter()];
                 break;
             case RUNNING:
-                region =  lettersMoving[letterCounter];
+                region =  lettersMoving[getLetterCounter()];
                 break;
             case FALLING:
             case STANDING:
             default:
-                region = lettersStopped[letterCounter];
+                region = lettersStopped[getLetterCounter()];
                 break;
 
         }
@@ -202,7 +202,7 @@ public TextureRegion getFrame(float dt){
 
     public void defineLetter(){
         BodyDef bdef =new BodyDef();
-        bdef.position.set(6962/ MainClass.PPM,32/ MainClass.PPM);//use to set start position on map
+        bdef.position.set(6662/ MainClass.PPM,32/ MainClass.PPM);//use to set start position on map
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
@@ -289,13 +289,7 @@ public float getStateTimer(){
 
     }
 public void speedUp(){
-
-
-
         b2body.applyLinearImpulse(new Vector2(6, 0), b2body.getWorldCenter(), true);
-
-
-
 }
 
 

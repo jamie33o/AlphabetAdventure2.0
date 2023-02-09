@@ -77,7 +77,7 @@ public class Plank extends TowerPlanks {
     }
 
     public void update(float dt) {
-       // stateTime += dt;
+        stateTime += dt;
 
 
 

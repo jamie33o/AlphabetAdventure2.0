@@ -4,128 +4,226 @@ size: 2048, 128
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+1_goingforward
+  rotate: false
+  xy: 1899, 3
+  size: 49, 55
+  orig: 49, 55
+  offset: 0, 0
+  index: -1
+1_standing
+  rotate: false
+  xy: 1845, 2
+  size: 52, 56
+  orig: 52, 56
+  offset: 0, 0
+  index: -1
+2_goingforward
+  rotate: false
+  xy: 1680, 3
+  size: 54, 55
+  orig: 54, 55
+  offset: 0, 0
+  index: -1
+2_standing
+  rotate: false
+  xy: 1794, 60
+  size: 55, 55
+  orig: 55, 55
+  offset: 0, 0
+  index: -1
+3_goingforward
+  rotate: false
+  xy: 1737, 60
+  size: 55, 55
+  orig: 55, 55
+  offset: 0, 0
+  index: -1
+3_standing
+  rotate: false
+  xy: 1680, 60
+  size: 55, 55
+  orig: 55, 55
+  offset: 0, 0
+  index: -1
 a_going_forward
   rotate: false
-  xy: 832, 45
+  xy: 971, 58
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 a_standing
   rotate: false
-  xy: 1222, 45
+  xy: 1361, 58
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 b_going_forward
   rotate: false
-  xy: 1027, 45
+  xy: 1166, 58
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 b_standing
   rotate: false
-  xy: 897, 45
+  xy: 1036, 58
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 brokenplank
   rotate: false
-  xy: 563, 2
+  xy: 665, 15
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 c_goin_forward
   rotate: false
-  xy: 1092, 45
+  xy: 1231, 58
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 c_stopped
   rotate: false
-  xy: 767, 45
+  xy: 869, 26
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 catapultarmdown
   rotate: false
-  xy: 257, 2
+  xy: 257, 15
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 catapultarmflat
   rotate: false
-  xy: 359, 2
+  xy: 461, 15
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 catapultarmup
   rotate: false
-  xy: 155, 2
+  xy: 155, 15
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 catapultbase
   rotate: false
-  xy: 665, 2
+  xy: 767, 15
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+crackedplank
+  rotate: false
+  xy: 359, 15
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 d_goin_forward
   rotate: false
-  xy: 1352, 45
+  xy: 1491, 58
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 d_stopped
   rotate: false
-  xy: 1287, 45
+  xy: 1426, 58
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 e_goin_forward
   rotate: false
-  xy: 962, 45
+  xy: 1101, 58
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 e_stopped
   rotate: false
-  xy: 1157, 45
+  xy: 1296, 58
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
+f_goingforward
+  rotate: false
+  xy: 1736, 3
+  size: 53, 55
+  orig: 53, 55
+  offset: 0, 0
+  index: -1
+f_standin
+  rotate: false
+  xy: 1908, 60
+  size: 55, 55
+  orig: 55, 55
+  offset: 0, 0
+  index: -1
+fireballs
+  rotate: false
+  xy: 869, 85
+  size: 100, 30
+  orig: 100, 30
+  offset: 0, 0
+  index: -1
 flatplank
   rotate: false
-  xy: 2, 2
+  xy: 2, 15
   size: 151, 100
   orig: 151, 100
   offset: 0, 0
   index: -1
+g_goingforward
+  rotate: false
+  xy: 1965, 62
+  size: 56, 53
+  orig: 56, 53
+  offset: 0, 0
+  index: -1
+g_standing
+  rotate: false
+  xy: 1851, 60
+  size: 55, 55
+  orig: 55, 55
+  offset: 0, 0
+  index: -1
+h_goingforward
+  rotate: false
+  xy: 1791, 2
+  size: 52, 56
+  orig: 52, 56
+  offset: 0, 0
+  index: -1
+h_standing
+  rotate: false
+  xy: 1556, 55
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
 powerUp
   rotate: false
-  xy: 1417, 42
+  xy: 1618, 55
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: -1
 verticalplank
   rotate: false
-  xy: 461, 2
+  xy: 563, 15
   size: 100, 100
   orig: 100, 100
   offset: 0, 0

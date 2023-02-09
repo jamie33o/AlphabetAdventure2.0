@@ -32,11 +32,10 @@ public class NextLetterBox extends InterActiveTileObject {
     @Override
     public void onHeadHit(Letter letter) {
         // Gdx.app.log("NextLetterBox","collision");//check if method bein called
-       // setCategoryFilter(MainClass.DESTROYED_BIT);//stops letters coliding wit brick
-
-        if(a == BLANK_COIN ){
+        setCategoryFilter(MainClass.DESTROYED_BIT);//stops letters coliding wit brick
+      /*  if(a == BLANK_COIN ){
        //play sound
-        }else if(object.getProperties().containsKey("ant")){//checks properties from object in tile list
+        }else*/ if(object.getProperties().containsKey("ant")){//checks properties from object in tile list
             screen.spawnItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 50 / MainClass.PPM),
                     NextLetter.class));
         }else if (object.getProperties().containsKey("powerup")) {//checks properties from object in tile list
