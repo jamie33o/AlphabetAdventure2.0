@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -54,10 +55,14 @@ public class PlayScreen implements Screen {
     public Letter player;
 
 
+    public Catapult catapult;
 
     private TextureAtlas atlas;
     private Array<Item> items;//array of all item in game world
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;//item definitions
+
+    private boolean isLoaded = true;
+    private boolean isFired = true;
 
 
 
@@ -93,6 +98,13 @@ public class PlayScreen implements Screen {
         items = new Array<Item>();
         fireballs = new Array<FireBall>();
 
+        catapult = new Catapult(this, creator.poly1.getX() /  MainClass.PPM, creator.poly1.getY() /MainClass.PPM,creator.object);
+
+
+    if(player.getX() >= catapult.getX()){
+
+
+    }
 
     }
 
@@ -132,13 +144,17 @@ public class PlayScreen implements Screen {
                 player.b2body.applyLinearImpulse(new Vector2(-0.04f, 0), player.b2body.getWorldCenter(), true);
             if(Gdx.input.isTouched() && Gdx.input.getX()> gamePort.getScreenWidth()/9&&  Gdx.input.getX()< gamePort.getScreenWidth()/4 && Gdx.input.getY()> gamePort.getScreenHeight()/1.3&& player.b2body.getLinearVelocity().x<2)
                 player.b2body.applyLinearImpulse(new Vector2(0.07f, 0), player.b2body.getWorldCenter(), true);
-            if(Gdx.input.isTouched(1) && player.b2body.getLinearVelocity().y <2&& player.getY() < 0.4 ||Gdx.input.isTouched() && Gdx.input.getX()> gamePort.getScreenWidth()/1.3&&player.b2body.getLinearVelocity().y <2&& player.getY() < 0.4 )
+            if(Gdx.input.isTouched(1) && player.b2body.getLinearVelocity().y <2&& player.getY() < 0.4 ||Gdx.input.isTouched() && Gdx.input.getX()> gamePort.getScreenWidth()/1.3&&player.b2body.getLinearVelocity().y <2&& player.getY() < 0.4 ) {
                 player.jump();
-
-          /* if (Gdx.input.isTouched(2)) {
                 fire();
 
-            }*/
+            }
+
+           if(Gdx.input.isTouched() && Gdx.input.getX()> gamePort.getScreenWidth()/9&&  Gdx.input.getX()< gamePort.getScreenWidth()/4 && Gdx.input.getY()> gamePort.getScreenHeight()/1.3&& player.b2body.getLinearVelocity().x<2) {
+               catapult.fireCatapult();
+
+               isLoaded = true;
+           }
         }
 
     }
@@ -159,10 +175,10 @@ public class PlayScreen implements Screen {
                 enemy.b2body.setActive(true);//wakes enemy up when player comes close
         }
 
-        for(Catapult catapult: creator.getCatapult()) {
+
             catapult.update(dt);
 
-        }
+
 
 
         for(Plank planks: creator.getPlanks()) {
@@ -238,12 +254,12 @@ public class PlayScreen implements Screen {
             enemy.draw(game.batch);
         }
 
-        for(Catapult catapult: creator.getCatapult()) {
+
 
 
             catapult.draw(game.batch);
 
-        }
+
         for(FireBall ball : fireballs)
             ball.draw(game.batch);
 
@@ -272,8 +288,15 @@ public class PlayScreen implements Screen {
 
     }
 
+
     public void fire(){
-        fireballs.add(new FireBall(this, player.getX(), player.getY(), true));
+
+        if(isLoaded) {
+            fireballs.add(new FireBall(this, catapult.armBody.getPosition().x, catapult.armBody.getPosition().y, true));
+
+            isLoaded = false;
+        }
+
     }
 
 
@@ -327,5 +350,9 @@ public class PlayScreen implements Screen {
 
 
 
+    }
+
+    public void isFired(boolean isFired) {
+        this.isFired = isFired;
     }
 }

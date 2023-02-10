@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
@@ -18,7 +19,7 @@ import com.example.alphabetadventure.tools.B2WorldCreator;
 
 public class Catapult extends TowerPlanks {
     Body baseBody;
-    Body armBody;
+    public Body armBody;
     TextureRegion catapultarm;
     TextureRegion catapultbase;
 
@@ -70,11 +71,11 @@ public class Catapult extends TowerPlanks {
 
 
         armFixtureDef.filter.categoryBits = MainClass.CATAPULT_ARM_BIT;
-        armFixtureDef.filter.maskBits = MainClass.GROUND_BIT | MainClass.PLANKS_BIT | MainClass.POWER_UP_BOX_BIT | MainClass.NEXT_LETTER_BOX_BIT | MainClass.ENEMY_BIT | MainClass.OBJECT_BIT | MainClass.LETTER_BIT;
+        armFixtureDef.filter.maskBits = MainClass.GROUND_BIT |MainClass.FIREBALL_BIT| MainClass.PLANKS_BIT | MainClass.POWER_UP_BOX_BIT | MainClass.NEXT_LETTER_BOX_BIT | MainClass.ENEMY_BIT | MainClass.OBJECT_BIT | MainClass.LETTER_BIT;
 
         FixtureDef baseFixtureDef = new FixtureDef();
         baseFixtureDef.shape = baseShape;
-        baseFixtureDef.density = 1;
+        baseFixtureDef.density = 50f;
 
         baseFixtureDef.filter.categoryBits = MainClass.CATAPULT_BASE_BIT;
         //sets wat letter can colide with
@@ -84,6 +85,16 @@ public class Catapult extends TowerPlanks {
         armBody.createFixture(armFixtureDef).setUserData(this);
         baseBody.createFixture(baseFixtureDef).setUserData(this);;
 
+//edgeshape is just line between two points used to keep the fireball on catapult
+        EdgeShape head = new EdgeShape();
+        //head. set sets where line will be
+        head.set(new Vector2(-75/MainClass.PPM,0/MainClass.PPM),new Vector2(-75/MainClass.PPM, 15/MainClass.PPM));//-2 offset and 5 above letter head
+        armFixtureDef.filter.categoryBits = MainClass.CATAPULT_ARM_CATCH_BIT;
+       armFixtureDef.filter.maskBits = MainClass.FIREBALL_BIT;
+
+        armFixtureDef.shape = head;//
+
+        armBody.createFixture(armFixtureDef).setUserData(this);//uniquely identify this head ficture as head
 
 // Define the joint that will link the arm and base fixtures
 
@@ -100,7 +111,11 @@ public class Catapult extends TowerPlanks {
 
     @Override
     public void use(Letter letter) {
-        armBody.applyLinearImpulse(new Vector2(1, 4), armBody.getWorldCenter(), true);
+
+    }
+
+    public void fireCatapult(){
+        armBody.applyLinearImpulse(new Vector2(.1f, .1f), armBody.getWorldCenter(), true);
 
     }
 

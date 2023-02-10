@@ -27,13 +27,15 @@ import com.example.alphabetadventure.sprites.tileobjects.NextLetterBox;
 public class B2WorldCreator {
     Polygon poly;
     TextureRegion region;
-    Polygon poly1;
+    public Polygon poly1;
     Polygon poly2;
     private Array<Plank> planks;
     private Array<Catapult> catapult;
     public float[] vertices;
     public static float[]  armVertices = null, baseVertices = null;
     private Array<Numbers> numbersArray;
+
+    public MapObject object;
     public B2WorldCreator(PlayScreen screen){
        World world = screen.getWorld();
        TiledMap map = screen.getMap();
@@ -126,10 +128,11 @@ public class B2WorldCreator {
         }
 
 
-        catapult = new Array<Catapult>();
+
         for(PolygonMapObject object : map.getLayers().get(8).getObjects().getByType(PolygonMapObject.class)){
             if( object.getProperties().containsKey("catapultbase")) {
 
+                this.object = object;
                 poly2 = object.getPolygon();
                 baseVertices = poly2.getVertices();
                 for (int i = 0; i < baseVertices.length; i++) {//resizes the triangle/ramp t
@@ -146,7 +149,7 @@ public class B2WorldCreator {
 
                 armVertices = poly1.getVertices();
                 for (int i = 0; i < armVertices.length; i++) {//resizes the triangle/ramp t
-                    if (i % 2 == 0) {
+                    if (i % 2 == 0 ) {
                         armVertices[i] = armVertices[i] * gamePort.getWorldWidth() / MainClass.V_WIDTH;
                     } else {
                         armVertices[i] = armVertices[i] * gamePort.getWorldHeight() / MainClass.V_HEIGHT;
@@ -155,8 +158,7 @@ public class B2WorldCreator {
 
             }
 
-            if(armVertices != null && baseVertices != null)
-                catapult.add(new Catapult(screen, poly1.getX() /  MainClass.PPM, poly1.getY() /MainClass.PPM,object));//put all the code in side coin class
+
 
         }
 
@@ -182,9 +184,6 @@ public static float[] getArmVertices(){
     public static float[] getBaseVertices(){
         return baseVertices;
     }
-    public Array<Catapult> getCatapult() {
 
-        return catapult;
-    }
 
 }

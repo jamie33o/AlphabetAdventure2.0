@@ -56,7 +56,7 @@ public class Plank extends TowerPlanks {
         // Rectangle rect = new Rectangle();
         fdef.filter.categoryBits = MainClass.PLANKS_BIT;
         //sets wat letter can colide with
-        fdef.filter.maskBits = MainClass.GROUND_BIT|MainClass.PLANKS_BIT| MainClass.POWER_UP_BOX_BIT |MainClass.NEXT_LETTER_BOX_BIT |MainClass.ENEMY_BIT|MainClass.OBJECT_BIT|MainClass.LETTER_BIT;
+        fdef.filter.maskBits = MainClass.GROUND_BIT|MainClass.PLANKS_BIT|MainClass.FIREBALL_BIT| MainClass.POWER_UP_BOX_BIT |MainClass.NEXT_LETTER_BOX_BIT |MainClass.ENEMY_BIT|MainClass.OBJECT_BIT|MainClass.LETTER_BIT;
 
 
         shape.setAsBox(bounds.getWidth()/2/MainClass.PPM,bounds.getHeight()/2/MainClass.PPM);

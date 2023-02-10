@@ -40,13 +40,13 @@ public class FireBall extends Sprite {
         }
         fireAnimation = new Animation(0.2f, frames);
         setRegion((TextureRegion) fireAnimation.getKeyFrame(0));
-        setBounds(x, y, 30 / MainClass.PPM, 30 / MainClass.PPM);
+        setBounds(x, y, 20 / MainClass.PPM, 25 / MainClass.PPM);
         defineFireBall();
     }
 
     public void defineFireBall(){
         BodyDef bdef = new BodyDef();
-        bdef.position.set(getX() + 12, getY());
+        bdef.position.set(screen.catapult.armBody.getPosition().x-  screen.catapult.getRegionWidth()/2/MainClass.PPM, screen.catapult.armBody.getPosition().y);
         bdef.type = BodyDef.BodyType.DynamicBody;
 
         if(!world.isLocked())
@@ -61,32 +61,37 @@ public class FireBall extends Sprite {
                 MainClass.GROUND_BIT |
                MainClass.PLANKS_BIT|
                 MainClass.CATAPULT_ARM_BIT|
-                MainClass.OBJECT_BIT;
+                MainClass.OBJECT_BIT|
+                        MainClass.CATAPULT_ARM_CATCH_BIT;
+
         fdef.shape = shape;
         fdef.restitution = 1;
+        fdef.density = 20f;
 
         fdef.friction = 0;
         System.out.println(b1body);
-        b1body.createFixture(fdef);
-        b1body.setLinearVelocity(new Vector2(fire ? 2 : -2, 2.5f));
+        b1body.createFixture(fdef).setUserData(this);
+       // b1body.setLinearVelocity(new Vector2(fire ? 2 : -2, 2.5f));
     }
 
     public void update(float dt){
         stateTime += dt;
         setRegion((TextureRegion) fireAnimation.getKeyFrame(stateTime, true));
         setPosition(b1body.getPosition().x - getWidth() / 2, b1body.getPosition().y - getHeight() / 2);
-        if((stateTime > 3 || setToDestroy) && !destroyed) {
-            world.destroyBody(b1body);
-            destroyed = true;
-        }
-        if(b1body.getLinearVelocity().y > 2f)
-            b1body.setLinearVelocity(b1body.getLinearVelocity().x, 2f);
-        if((fire && b1body.getLinearVelocity().x < 0) || (!fire && b1body.getLinearVelocity().x > 0))
-            setToDestroy();
+
+      //  if(b1body.getLinearVelocity().y > 2f)
+       //     b1body.setLinearVelocity(b1body.getLinearVelocity().x, 2f);
+       /* if((fire && b1body.getLinearVelocity().x < 0) || (!fire && b1body.getLinearVelocity().x > 0))
+            setToDestroy();*/
     }
+
+
+
 
     public void setToDestroy(){
         setToDestroy = true;
+        world.destroyBody(b1body);
+        destroyed = true;
     }
 
     public boolean isDestroyed(){
