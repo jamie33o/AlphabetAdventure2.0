@@ -33,8 +33,12 @@ public class MainClass extends Game {//changed to game from application adapter
 
 	public static final short CATAPULT_BASE_BIT = 4096;
 	public static final short CATAPULT_ARM_BIT = 8192;
-	public static final short FIREBALL_BIT = 8192;
+	public static final short FIREBALL_BIT = 4096;
 	public static final short CATAPULT_ARM_CATCH_BIT = 16384;
+	public static final short BABY_LETTER_BIT = -16384;
+
+	public static final short DOOR_BIT = -8192;
+
 
 
 

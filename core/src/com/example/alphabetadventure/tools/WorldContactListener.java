@@ -10,8 +10,8 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.screens.PlayScreen;
 import com.example.alphabetadventure.sprites.Letter;
+import com.example.alphabetadventure.sprites.endoflevel.BabyLetter;
 import com.example.alphabetadventure.sprites.endoflevel.Catapult;
-import com.example.alphabetadventure.sprites.endoflevel.FireBall;
 import com.example.alphabetadventure.sprites.endoflevel.Plank;
 import com.example.alphabetadventure.sprites.enemies.Enemy;
 import com.example.alphabetadventure.sprites.items.NextLetter;
@@ -47,10 +47,12 @@ public class WorldContactListener implements ContactListener {
                     ((Enemy) fixb.getUserData()).hitOnHead((Letter) fixA.getUserData());
                 break;
             case MainClass.ENEMY_BIT | MainClass.OBJECT_BIT: //mario collides with enemy head
-                if (fixA.getFilterData().categoryBits == MainClass.ENEMY_BIT)//then we know fixa is enemy
+                if (fixA.getFilterData().categoryBits == MainClass.ENEMY_BIT) {//then we know fixa is enemy
                     ((Enemy) fixA.getUserData()).reverseVelocity(true, false);//
-                else
+
+                } else {
                     ((Enemy) fixb.getUserData()).reverseVelocity(true, false);
+                }
                 break;
 
             case MainClass.LETTER_BIT | MainClass.ENEMY_BIT:
@@ -68,10 +70,8 @@ public class WorldContactListener implements ContactListener {
             case MainClass.NEXTLETTER_BIT | MainClass.OBJECT_BIT: //mario collides with enemy head
                 if (fixA.getFilterData().categoryBits == MainClass.NEXTLETTER_BIT) {//then we know fixa is enemy
                     ((NextLetter) fixA.getUserData()).reverseVelocity(true, false);//
-                    ((NextLetter) fixA.getUserData()).flip(true,false);
                 } else{
                     ((NextLetter) fixb.getUserData()).reverseVelocity(true, false);
-                    ((NextLetter) fixb.getUserData()).flip(true,false);
                 }
                 break;
             case MainClass.NEXTLETTER_BIT | MainClass.LETTER_BIT: //if mario collides with item
@@ -82,8 +82,9 @@ public class WorldContactListener implements ContactListener {
                 break;
             case MainClass.LETTER_BIT | MainClass.OBJECT_BIT: //mario collides with enemy head
                 if (fixA.getFilterData().categoryBits == MainClass.LETTER_BIT) {//then we know fixa is enemy
-                    if(Letter.isRunningRight()) {
-                        ((Letter) fixA.getUserData()).setOrigin(0.2f,0.3f);
+                    ((Letter) fixA.getUserData()).setOrigin(0.2f,0.3f);
+
+                    if(Letter.runningRight1) {
 
                         ((Letter) fixA.getUserData()).setRotation(32);
                     }else {
@@ -93,7 +94,7 @@ public class WorldContactListener implements ContactListener {
                 } else{
                     ((Letter) fixb.getUserData()).setOrigin(0.15f,0.2f);
 
-                    if(Letter.isRunningRight()) {
+                    if(Letter.runningRight1) {
                         ((Letter) fixb.getUserData()).setRotation(32);
                     }else{
                         ((Letter) fixb.getUserData()).setRotation(-32);
@@ -104,10 +105,8 @@ public class WorldContactListener implements ContactListener {
             case MainClass.POWER_UP_BIT | MainClass.OBJECT_BIT: //mario collides with enemy head
                 if (fixA.getFilterData().categoryBits == MainClass.POWER_UP_BIT) {//then we know fixa is enemy
                     ((PowerUp) fixA.getUserData()).reverseVelocity(true, false);//
-                    // ((PowerUp) fixA.getUserData()).flip(true,false);
                 } else{
                     ((PowerUp) fixb.getUserData()).reverseVelocity(true, false);
-                    // ((PowerUp) fixb.getUserData()).flip(true,false);
                 }
                 break;
             case MainClass.POWER_UP_BIT | MainClass.LETTER_BIT: //if mario collides with item
@@ -129,31 +128,42 @@ public class WorldContactListener implements ContactListener {
 
 
                 break;
-            case MainClass.LETTER_BIT | MainClass.PLANKS_BIT: //mario collides with enemy head
-                if (fixA.getFilterData().categoryBits == MainClass.PLANKS_BIT) {//then we know fixa is enemy
-                    ((Plank) fixA.getUserData()).onHit();//
-                    // ((Plank) fixA.getUserData()).flip(true,false);
+
+
+            /*case MainClass.PLANKS_BIT|MainClass.FIREBALL_BIT  :
+                if(fixA.getFilterData().categoryBits == MainClass.FIREBALL_BIT) {
+                //   ((FireBall) fixA.getUserData()).fireBallSetToDestroy();
+                }else {
+                 //   ((FireBall) fixb.getUserData()).fireBallSetToDestroy();
+
+                }
+                break;*/
+            case MainClass.LETTER_BIT| MainClass.DOOR_BIT:
+                if (fixA.getFilterData().categoryBits == MainClass.LETTER_BIT) {//then we know fixa is enemy
+                    ((Letter) fixA.getUserData()).setToDestroy();
                 } else{
-                    ((Plank) fixb.getUserData()).onHit();
-                    //((Plank) fixb.getUserData()).flip(true,false);
+
+                    ((Letter) fixb.getUserData()).setToDestroy();
                 }
                 break;
-           /* case MainClass.FIREBALL_BIT | MainClass.CATAPULT_ARM_BIT: //if mario collides with item
+            case MainClass.BABY_LETTER_BIT | MainClass.DOOR_BIT: //mario collides with enemy head
+                if (fixA.getFilterData().categoryBits == MainClass.BABY_LETTER_BIT) {//then we know fixa is enemy
+                    ((BabyLetter) fixA.getUserData()).babyLetterSetToDestroy();//
+                } else{
+                    ((BabyLetter) fixb.getUserData()).babyLetterSetToDestroy();
+                }
+                break;
+            case MainClass.FIREBALL_BIT | MainClass.CATAPULT_ARM_BIT: //if mario collides with item
                 if(fixA.getFilterData().categoryBits == MainClass.CATAPULT_ARM_BIT)//is fixture a the collected item
-                    ((Catapult)fixA.getUserData()).use();//if its then we use on letter
+                    ((Catapult)fixA.getUserData()).setIsLoaded(true);//if its then we use on letter
                 else
-                    ((Catapult)fixb.getUserData()).use();//other wise fixture fixb must be item then we want to use it on fix a wich must be letter
-                break;*/
-//            case MainClass.PLANKS_BIT|MainClass.FIREBALL_BIT  :
-//                if(fixA.getFilterData().categoryBits == MainClass.FIREBALL_BIT) {
-//                   ((FireBall) fixA.getUserData()).setToDestroy();
-//                }else {
-//                    ((FireBall) fixb.getUserData()).setToDestroy();
-//
-//                }
-//                break;
+                    ((Catapult)fixb.getUserData()).setIsLoaded(true);//other wise fixture fixb must be item then we want to use it on fix a wich must be letter
+                break;
+
 
         }
+
+
 
     }
 
@@ -193,7 +203,12 @@ public class WorldContactListener implements ContactListener {
 
                 }
                 break;
-
+  case MainClass.FIREBALL_BIT | MainClass.CATAPULT_ARM_BIT: //if mario collides with item
+                if(fixA.getFilterData().categoryBits == MainClass.CATAPULT_ARM_BIT)//is fixture a the collected item
+                    ((Catapult)fixA.getUserData()).setIsLoaded(false);//if its then we use on letter
+                else
+                    ((Catapult)fixb.getUserData()).setIsLoaded(false);//other wise fixture fixb must be item then we want to use it on fix a wich must be letter
+                break;
 
 
 

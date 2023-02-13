@@ -12,6 +12,8 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -36,9 +38,9 @@ public class B2WorldCreator {
     private Array<Numbers> numbersArray;
 
     public MapObject object;
-    public B2WorldCreator(PlayScreen screen){
-       World world = screen.getWorld();
-       TiledMap map = screen.getMap();
+    public B2WorldCreator(PlayScreen screen) {
+        World world = screen.getWorld();
+        TiledMap map = screen.getMap();
 
 
         BodyDef bdef = new BodyDef();//creates body for interacting with objects
@@ -48,31 +50,35 @@ public class B2WorldCreator {
 
         MapProperties vertexString = map.getProperties();
         //creates body for each part of the ground
-        for(MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){
+        for (MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             bdef.type = BodyDef.BodyType.StaticBody;//create type of movement
-            bdef.position.set((rect.getX()+rect.getWidth() / 2)/ MainClass.PPM,(rect.getY()+ rect.getHeight()/2)/ MainClass.PPM);
+            bdef.position.set((rect.getX() + rect.getWidth() / 2) / MainClass.PPM, (rect.getY() + rect.getHeight() / 2) / MainClass.PPM);
 
             body = world.createBody(bdef);
 
-            shape.setAsBox(rect.getWidth() / 2/ MainClass.PPM, rect.getHeight() /2/ MainClass.PPM);
+            shape.setAsBox(rect.getWidth() / 2 / MainClass.PPM, rect.getHeight() / 2 / MainClass.PPM);
             fdef.shape = shape;
             fdef.filter.categoryBits = MainClass.GROUND_BIT;
-            fdef.filter.maskBits = MainClass.GROUND_BIT|MainClass.PLANKS_BIT| MainClass.NEXT_LETTER_BOX_BIT|MainClass.POWER_UP_BIT |MainClass.POWER_UP_BOX_BIT |MainClass.OBJECT_BIT|MainClass.ENEMY_HEAD_BIT|MainClass.ENEMY_BIT| MainClass.NEXTLETTER_BIT |MainClass.LETTER_BIT;
+            fdef.filter.maskBits =  MainClass.FIREBALL_BIT| MainClass.PLANKS_BIT |
+                    MainClass.BABY_LETTER_BIT |
+                    MainClass.POWER_UP_BOX_BIT |
+                    MainClass.OBJECT_BIT |  MainClass.ENEMY_BIT
+                    | MainClass.NEXTLETTER_BIT | MainClass.LETTER_BIT;
 
             body.createFixture(fdef);
         }
 
         //creates body for reading when ramps touched
-        for(MapObject object : map.getLayers().get(3).getObjects().getByType(PolygonMapObject.class)){
+        for (MapObject object : map.getLayers().get(3).getObjects().getByType(PolygonMapObject.class)) {
             poly = ((PolygonMapObject) object).getPolygon();
 
             Rectangle rect = poly.getBoundingRectangle();
 
             bdef.type = BodyDef.BodyType.StaticBody;
 
-            bdef.position.set((rect.getX() +rect.getWidth())/ MainClass.PPM, rect.getY() / MainClass.PPM);
+            bdef.position.set((rect.getX() + rect.getWidth()) / MainClass.PPM, rect.getY() / MainClass.PPM);
             body = world.createBody(bdef);
 
 
@@ -96,36 +102,43 @@ public class B2WorldCreator {
 
 
         //creates body for items in box coin?
-        for(MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){
+        for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            new NextLetterBox(screen,object);//put all the code in side coin class
+            new NextLetterBox(screen, object);//put all the code in side coin class
 
         }
 
         //creates body for emptybox
-        for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)){
+        for (MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-          new PowerUpBox(screen,object);//put all code that was in here in interactive tile object
+            new PowerUpBox(screen, object);//put all code that was in here in interactive tile object
         }
         //create all goombas
         numbersArray = new Array<Numbers>();
-        for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
+        for (MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            numbersArray.add(new Numbers(screen,rect.getX()/MainClass.PPM, rect.getY()/MainClass.PPM));//put all code that was in here in interactive tile object
+            numbersArray.add(new Numbers(screen, rect.getX() / MainClass.PPM, rect.getY() / MainClass.PPM));//put all code that was in here in interactive tile object
         }
 
 
         planks = new Array<Plank>();
-        for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)){
+        for (MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
 
-          planks.add(new Plank(screen,rect.getX()/MainClass.PPM, rect.getY()/MainClass.PPM,object));//put all the code in side coin class
+            planks.add(new Plank(screen, rect.getX() / MainClass.PPM, rect.getY() / MainClass.PPM, object));//put all the code in side coin class
+
+
+
+
+
 
         }
+
+
 
 
 
@@ -164,6 +177,24 @@ public class B2WorldCreator {
 
 
 
+        for (MapObject object : map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+
+            bdef.type = BodyDef.BodyType.StaticBody;//create type of movement
+            bdef.position.set((rect.getX() + rect.getWidth() / 2) / MainClass.PPM, (rect.getY() + rect.getHeight() / 2) / MainClass.PPM);
+
+            body = world.createBody(bdef);
+
+            shape.setAsBox(rect.getWidth() / 2 / MainClass.PPM, rect.getHeight() / 2 / MainClass.PPM);
+            fdef.shape = shape;
+
+            fdef.filter.categoryBits = MainClass.DOOR_BIT;
+            fdef.filter.maskBits = MainClass.GROUND_BIT | MainClass.BABY_LETTER_BIT | MainClass.LETTER_BIT;
+
+
+            body.createFixture(fdef);
+
+        }
 
     }
     public Array<Numbers> getNumbersArray() {

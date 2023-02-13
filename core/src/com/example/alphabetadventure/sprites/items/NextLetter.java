@@ -12,14 +12,15 @@ import com.example.alphabetadventure.sprites.Letter;
 public class NextLetter extends Item{
 
     TextureRegion region;
-    private boolean runningRight;
 
-    Letter letter;
+   TextureRegion forwards;
+    public  String[] lettersMoving;
 
-    int nextLetterCounter;
     public NextLetter(PlayScreen screen, float x, float y) {
         super(screen, x, y);
-        letter = new Letter(screen);
+        lettersMoving = new String[]{"a_going_forward","b_going_forward","c_goin_forward", "d_goin_forward", "e_goin_forward", "f_goingforward", "g_goingforward", "h_goingforward"};
+        forwards = new TextureRegion(screen.getAtlas().findRegion(lettersMoving[Letter.getLetterCounter()]),0,0,60,53);
+
 
         velocity = new Vector2(0.7f,0);//sets movement
         //todo use getter
@@ -50,9 +51,9 @@ public class NextLetter extends Item{
     public void use(Letter letter) {
         destroy();
 
-        letter.setLetterCounter(letter.getLetterCounter()+1);
+        letter.setLetterCounter(Letter.getLetterCounter()+1);
 
-        if(letter.getLetterCounter() >= letter.lettersMoving.length){
+        if(Letter.getLetterCounter() >= lettersMoving.length){
             letter.setLetterCounter(0);
 
 
@@ -63,11 +64,8 @@ public class NextLetter extends Item{
     public void update(float dt){
         super.update(dt);
         setPosition(body.getPosition().x - getWidth() / 2 , body.getPosition().y - getHeight() / 2);
-        if(Letter.getLetterCounter() <= letter.lettersMoving.length-1) {
-            setRegion(letter.lettersMoving[Letter.getLetterCounter() + 1]);
-        }else {
-            setRegion(letter.lettersMoving[1]);
-//todo end game on last letter
+        if(Letter.getLetterCounter() <= lettersMoving.length-1) {
+            setRegion(new TextureRegion(screen.getAtlas().findRegion(lettersMoving[Letter.getLetterCounter()+1]),0,0,60,53));
         }
 
 

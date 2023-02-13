@@ -1,6 +1,5 @@
 package com.example.alphabetadventure.sprites;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -16,42 +15,43 @@ import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.screens.PlayScreen;
 import com.example.alphabetadventure.sprites.enemies.Enemy;
 
+
 public class Letter extends Sprite {
+
+
 
 
     //Java Enums Previous Next Enums An enum is a special "class" that represents a group of constants (unchangeable variables, like final variables)
     public enum State {FALLING,JUMPING,STANDING,RUNNING,DEAD};
     public State currentState;
     public State previousState;
-    private Animation letterJump;
+
 
     private float stateTimer;//keep track of time in any given state
-    public static boolean runningRight;
+    public static boolean runningRight1;
 
     public World world;
     public Body b2body;
-    private  TextureRegion  aStopped,bStopped,cStopped, dStopped,eStopped,fStopped,gStopped,hStopped;
-    private  TextureRegion aForward,bForward,cForward,dForward,eForward,fForward,gForward,hForward;
     private TextureRegion letterDead;
+
     private boolean letterIsDead;
 
+
+    public  TextureRegion[] lettersStopped;
     public  TextureRegion[] lettersMoving;
 
-
-
     private static int letterCounter ;
-    public  TextureRegion[] lettersStopped;
-    TextureRegion region;
+    TextureRegion region1;
     public PlayScreen screen;
 
-
-
+    public int exitDone = 0;
+    private boolean setToDestroy;
     public static int getLetterCounter() {
         return letterCounter;
     }
 
     public void setLetterCounter(int letterCounter) {
-        this.letterCounter = letterCounter;
+        Letter.letterCounter = letterCounter;
     }
 
 
@@ -62,67 +62,64 @@ public class Letter extends Sprite {
         currentState = State.STANDING;
         previousState = State.STANDING;
         stateTimer = 0;
-        runningRight = true;
+     //  runningRight1 = false;
 
-
-
-       /* Array<TextureRegion> frames = new Array<TextureRegion>();//array to pass the constructor for the animation of letter
-        for(int i = 0; i<0; i++)//runs true the atlas images to create running animation
-            frames.add(new TextureRegion(getTexture(),i*50,0,54,53));
-        letterRun = new Animation(0.1f,frames);//creates the animatior frame duration how long between frames
-        frames.clear();
-
-        for(int i = 0; i<1; i++){//gets 4th img in atlas i*50 = 4th img 50 is pixels
-            frames.add(new TextureRegion(getTexture(),i*50,0,54,53));
-            letterJump = new Animation(0.1f,frames);//creates the animatior frame duration how long between frames
-            frames.clear();
-        }*/
         lettersMoving = new TextureRegion[]{
-                aStopped = new TextureRegion(screen.getAtlas().findRegion("a_going_forward"),0,0,60,53),
-                bStopped = new TextureRegion(screen.getAtlas().findRegion("b_going_forward"),0,0,60,53),
-                cStopped = new TextureRegion(screen.getAtlas().findRegion("c_goin_forward"),0,0,60,53),
-                dStopped = new TextureRegion(screen.getAtlas().findRegion("d_goin_forward"),0,0,60,53),
-                eStopped = new TextureRegion(screen.getAtlas().findRegion("e_goin_forward"),0,0,60,53),
-                fStopped = new TextureRegion(screen.getAtlas().findRegion("f_goingforward"),0,0,60,53),
-                gStopped = new TextureRegion(screen.getAtlas().findRegion("g_goingforward"),0,0,60,53),
-                hStopped = new TextureRegion(screen.getAtlas().findRegion("h_goingforward"),0,0,60,53)
-        };
+                 new TextureRegion(screen.getAtlas().findRegion("a_going_forward"),0,0,60,53),
+        new TextureRegion(screen.getAtlas().findRegion("b_going_forward"),0,0,60,53),
+        new TextureRegion(screen.getAtlas().findRegion("c_goin_forward"),0,0,60,53) ,
+        new TextureRegion(screen.getAtlas().findRegion("d_goin_forward"),0,0,60,53) ,
+        new TextureRegion(screen.getAtlas().findRegion("e_goin_forward"),0,0,60,53) ,
+        new TextureRegion(screen.getAtlas().findRegion("f_goingforward"),0,0,60,53) ,
+        new TextureRegion(screen.getAtlas().findRegion("g_goingforward"),0,0,60,53) ,
+        new TextureRegion(screen.getAtlas().findRegion("h_goingforward"),0,0,60,53)
+    };
 
         lettersStopped = new TextureRegion[]{
-                aForward = new TextureRegion(screen.getAtlas().findRegion("a_standing"),0,0,60,53),
-                bForward = new TextureRegion(screen.getAtlas().findRegion("b_standing"),0,0,60,53),
-                cForward = new TextureRegion(screen.getAtlas().findRegion("c_stopped"),0,0,60,53),
-                dForward = new TextureRegion(screen.getAtlas().findRegion("d_stopped"),0,0,60,53),
-                eForward = new TextureRegion(screen.getAtlas().findRegion("e_stopped"),0,0,60,53),
-                fForward = new TextureRegion(screen.getAtlas().findRegion("f_standin"),0,0,60,53),
-                gForward = new TextureRegion(screen.getAtlas().findRegion("g_standing"),0,0,60,53),
-                hForward = new TextureRegion(screen.getAtlas().findRegion("h_standing"),0,0,60,53)
-
-
-
-
-
-        };
-
+        new TextureRegion(screen.getAtlas().findRegion("a_standing"),0,0,60,53),
+        new TextureRegion(screen.getAtlas().findRegion("b_standing"),0,0,60,53),
+        new TextureRegion(screen.getAtlas().findRegion("c_stopped"),0,0,60,53),
+        new TextureRegion(screen.getAtlas().findRegion("d_stopped"),0,0,60,53),
+        new TextureRegion(screen.getAtlas().findRegion("e_stopped"),0,0,60,53),
+        new TextureRegion(screen.getAtlas().findRegion("f_standin"),0,0,60,53),
+        new TextureRegion(screen.getAtlas().findRegion("g_standing"),0,0,60,53),
+        new TextureRegion(screen.getAtlas().findRegion("h_standing"),0,0,60,53)
+    };
 
         //create dead mario texture region
-        letterDead = new TextureRegion(screen.getAtlas().findRegion("a_going_forward"), 0, 0, 50, 50);
+        letterDead = new TextureRegion(lettersMoving[letterCounter]);
 
 
         defineLetter();           //in the atlas x is top left y is top left then width and height of image
         setBounds(0,0,30/MainClass.PPM,33/MainClass.PPM);//setbounds is set to let know how large to render letter on screen
-        setRegion(aStopped);
+        setRegion(lettersStopped[letterCounter]);
+
+
     }
 
 
-
-
     public void update(float dt){
+        stateTimer += dt;
+
         setPosition(b2body.getPosition().x - getWidth()/2, b2body.getPosition().y - getHeight()/2);
-       setRegion(getFrame(dt));//this updates the jump and run animations
+
+
+           setRegion(getFrame(dt));//this updates the jump and run animations
+
+
+
+        if(PlayScreen.endOfLevel) {
+            b2body.applyLinearImpulse(new Vector2(-.03f, 0), b2body.getWorldCenter(), true);
+            exitDone++;
+            if(exitDone == 1)
+             exit();
+
+        }
 
         if(b2body.getPosition().y < 0 )
             die();
+
+
     }
 
 
@@ -131,39 +128,37 @@ public TextureRegion getFrame(float dt){
 
 
     switch(currentState){//switch between states to change which for loop animation to use
-        case DEAD:
-                region = lettersStopped[0];
-                break;
-            case JUMPING:
-                region =  lettersMoving[getLetterCounter()];
-                break;
             case RUNNING:
-                region =  lettersMoving[getLetterCounter()];
+                region1 = lettersMoving[letterCounter];
+
                 break;
+        case DEAD:
+        case JUMPING:
             case FALLING:
             case STANDING:
-            default:
-                region = lettersStopped[getLetterCounter()];
+        default:
+            region1 =  lettersStopped[letterCounter];
                 break;
 
-        }
-        if((b2body.getLinearVelocity().x < 0 || !runningRight) &&!region.isFlipX()){//if he is running left and image not flipped left
-            region.flip(true,false);//flips image to left
-            runningRight = false;
-        } else if ((b2body.getLinearVelocity().x > 0 || runningRight) && region.isFlipX()) {//if he running right and image is facing left and running right checks that he not standing still
-            region.flip(true,false);//flips image to right
-            runningRight = true;
+    }
+        if(b2body.getLinearVelocity().x < 0 && !region1.isFlipX() ){//if he is running left and image not flipped left
+            region1.flip(true,false);//flips image to left
+            runningRight1 = false;
+        } else if (b2body.getLinearVelocity().x > 0 && region1.isFlipX()){//if he running right and image is facing left and running right checks that he not standing still
+            region1.flip(true,false);//flips image to right
+            runningRight1 = true;
 
         }
         stateTimer = currentState == previousState ? stateTimer + dt : 0;//set state timer to equal to does currentstate == previous state if it does then set statetimer  + dt to 0
         previousState = currentState;
-        return region;
+        return region1;
 
 }
 
     public static boolean isRunningRight() {
-        return runningRight;
+        return runningRight1;
     }
+
 
 
     public State getState(){//checks if letter running jumping standing
@@ -174,10 +169,6 @@ public TextureRegion getFrame(float dt){
             return State.DEAD;
 
     }else {
-    /*        if(b2body.getLinearVelocity().y >0 || (b2body.getLinearVelocity().y < 0 && previousState == State.JUMPING))
-            return State.JUMPING;//returs the jumping animation
-        else if (b2body.getLinearVelocity().y<0)
-            return State.FALLING;//returns falling animation*/
         if (b2body.getLinearVelocity().x != 0)
             return State.RUNNING;//returns running animation
         else
@@ -204,6 +195,7 @@ public TextureRegion getFrame(float dt){
         BodyDef bdef =new BodyDef();
         bdef.position.set(6662/ MainClass.PPM,32/ MainClass.PPM);//use to set start position on map
         bdef.type = BodyDef.BodyType.DynamicBody;
+
         b2body = world.createBody(bdef);
 
 
@@ -221,9 +213,7 @@ public TextureRegion getFrame(float dt){
                 MainClass.OBJECT_BIT|
                 MainClass.ENEMY_HEAD_BIT|
                 MainClass.ENEMY_BIT|
-                MainClass.NEXTLETTER_BIT|
-                MainClass.CATAPULT_BASE_BIT|
-                        MainClass.CATAPULT_ARM_BIT;
+                MainClass.NEXTLETTER_BIT;
 
 
 
@@ -275,6 +265,16 @@ die();
 
 }
 
+public void setToDestroy() {
+
+    b2body.setLinearVelocity(0,0);
+
+
+   setBounds(0, 0,  15/ MainClass.PPM, 15 / MainClass.PPM);
+
+    setToDestroy = false;//destroys body when hits door object
+}
+
 public boolean isDead(){
 
 
@@ -285,13 +285,26 @@ public float getStateTimer(){
         return stateTimer;
 }
 
-    public void ramp(){
 
-    }
 public void speedUp(){
-        b2body.applyLinearImpulse(new Vector2(6, 0), b2body.getWorldCenter(), true);
+        b2body.applyLinearImpulse(new Vector2(6f, 0), b2body.getWorldCenter(), true);
 }
 
+    public void dispose() {
+       getTexture().dispose();
+
+    }
+
+    public void exit(){
+
+        Filter filter = new Filter();
+        filter.categoryBits = MainClass.LETTER_BIT;
+        filter.maskBits = MainClass.GROUND_BIT|MainClass.DOOR_BIT;
+
+        for (Fixture fixture : b2body.getFixtureList()) {
+            fixture.setFilterData(filter);//stops all fixture from collidin
+        }
+    }
 
 }
 

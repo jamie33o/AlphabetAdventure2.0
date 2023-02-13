@@ -8,18 +8,26 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.scenes.Hud;
+import com.example.alphabetadventure.sprites.endoflevel.BabyLetter;
 import com.example.alphabetadventure.sprites.endoflevel.Catapult;
 import com.example.alphabetadventure.sprites.endoflevel.FireBall;
 import com.example.alphabetadventure.sprites.endoflevel.Plank;
@@ -44,7 +52,6 @@ public class PlayScreen implements Screen {
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
-    private Array<FireBall> fireballs;
 
     //Box2d Variables
     private World world;
@@ -61,17 +68,25 @@ public class PlayScreen implements Screen {
     private Array<Item> items;//array of all item in game world
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;//item definitions
 
-    private boolean isLoaded = true;
-    private boolean isFired = true;
+   public boolean nextlevel = false;
+
+
+    public static boolean endOfLevel = false;
+
+    private boolean isfired = true;
+
+    BabyLetter babyletter;
+    float stateTime;
+
 
 
 
     public PlayScreen(MainClass game){
-        atlas = new TextureAtlas("MainAtlas.atlas");
+        atlas = new TextureAtlas("mainatlas.atlas");
 
 
         this.game = game;//brings in game class
-        gamecam = new OrthographicCamera();
+        gamecam = new OrthographicCamera();//could use Gdx.graphics.getwidth() to set window size and getheight()
         gamePort = new FitViewport(MainClass.V_WIDTH / MainClass.PPM,MainClass.V_HEIGHT / MainClass.PPM,gamecam);//resize game for different screen size fitviewport keeps aspect ratio
         hud = new Hud(game.batch);
 
@@ -96,15 +111,10 @@ public class PlayScreen implements Screen {
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
 
         items = new Array<Item>();
-        fireballs = new Array<FireBall>();
 
         catapult = new Catapult(this, creator.poly1.getX() /  MainClass.PPM, creator.poly1.getY() /MainClass.PPM,creator.object);
+        babyletter = new BabyLetter(this);
 
-
-    if(player.getX() >= catapult.getX()){
-
-
-    }
 
     }
 
@@ -140,20 +150,22 @@ public class PlayScreen implements Screen {
     public void handleInput(float dt){
         if(player.currentState != Letter.State.DEAD) {
 
-            if(Gdx.input.isTouched() && Gdx.input.getX()< gamePort.getScreenWidth()/3.5&& Gdx.input.getY()> gamePort.getScreenHeight()/1.3 && player.b2body.getLinearVelocity().x<2)
+            if(!endOfLevel &&Gdx.input.isTouched() && Gdx.input.getX()< gamePort.getScreenWidth()/3.5&& Gdx.input.getY()> gamePort.getScreenHeight()/1.3 && player.b2body.getLinearVelocity().x>-2f)
                 player.b2body.applyLinearImpulse(new Vector2(-0.04f, 0), player.b2body.getWorldCenter(), true);
-            if(Gdx.input.isTouched() && Gdx.input.getX()> gamePort.getScreenWidth()/9&&  Gdx.input.getX()< gamePort.getScreenWidth()/4 && Gdx.input.getY()> gamePort.getScreenHeight()/1.3&& player.b2body.getLinearVelocity().x<2)
-                player.b2body.applyLinearImpulse(new Vector2(0.07f, 0), player.b2body.getWorldCenter(), true);
-            if(Gdx.input.isTouched(1) && player.b2body.getLinearVelocity().y <2&& player.getY() < 0.4 ||Gdx.input.isTouched() && Gdx.input.getX()> gamePort.getScreenWidth()/1.3&&player.b2body.getLinearVelocity().y <2&& player.getY() < 0.4 ) {
-                player.jump();
-                fire();
 
+            if(!endOfLevel&& Gdx.input.isTouched() && Gdx.input.getX()> gamePort.getScreenWidth()/9&&  Gdx.input.getX()< gamePort.getScreenWidth()/4 && Gdx.input.getY()> gamePort.getScreenHeight()/1.3&& player.b2body.getLinearVelocity().x<2f)
+                player.b2body.applyLinearImpulse(new Vector2(0.07f, 0), player.b2body.getWorldCenter(), true);
+
+            if(!endOfLevel && Gdx.input.isTouched(1) && player.b2body.getLinearVelocity().y <2&& player.getY() < 0.4 ||!endOfLevel&& Gdx.input.isTouched() && Gdx.input.getX()> gamePort.getScreenWidth()/1.3&&player.b2body.getLinearVelocity().y <2&& player.getY() < 0.4 ) {
+                player.jump();
             }
 
-           if(Gdx.input.isTouched() && Gdx.input.getX()> gamePort.getScreenWidth()/9&&  Gdx.input.getX()< gamePort.getScreenWidth()/4 && Gdx.input.getY()> gamePort.getScreenHeight()/1.3&& player.b2body.getLinearVelocity().x<2) {
+
+           if(  endOfLevel && Gdx.input.isTouched() && Gdx.input.getX()> gamePort.getScreenWidth()/9&&  Gdx.input.getX()< gamePort.getScreenWidth()/4 && Gdx.input.getY()> gamePort.getScreenHeight()/1.3&& player.b2body.getLinearVelocity().x<2) {
                catapult.fireCatapult();
 
-               isLoaded = true;
+
+
            }
         }
 
@@ -162,12 +174,17 @@ public class PlayScreen implements Screen {
 
     public void update(float dt){
         handleSpawnedItems();
+        stateTime += dt;
+
+        if(nextlevel)
+            stateTime =0;
 
         handleInput(dt);//updates the input keep at top
        //takes 1 step in the physics simulation (60 times a second)
-        world.step(1/60f,6,2);
+        world.step(1/60f,6,2);//todo check if can use statetime to make smotthe on different device tablet
 
         player.update(dt);//updates the letter
+        babyletter.update(dt);
 
         for(Enemy enemy: creator.getNumbersArray()) {
             enemy.update(dt);
@@ -178,8 +195,9 @@ public class PlayScreen implements Screen {
 
             catapult.update(dt);
 
-
-
+       /* Gdx.app.log("Java Heap", String.valueOf(Gdx.app.getJavaHeap()));
+        Gdx.app.log("Native Heap", String.valueOf(Gdx.app.getNativeHeap()));
+*/
 
         for(Plank planks: creator.getPlanks()) {
             planks.update(dt);
@@ -189,18 +207,19 @@ public class PlayScreen implements Screen {
             item.update(dt);
 
         }
-        for(FireBall ball : fireballs) {
-            ball.update(dt);
-            if(ball.isDestroyed())
-                fireballs.removeValue(ball, true);
+
+
+        hud.update(dt);
+
+        //stops gamecam for end of level
+        if( player.b2body.getPosition().x >= catapult.armBody.getPosition().x +gamecam.viewportWidth /4.2){
+           endOfLevel = true;
         }
-            hud.update(dt);
 
         //attach our gamecam to our player.x coordinate stops camera moving
-        if(player.currentState != Letter.State.DEAD){
+        if(player.currentState != Letter.State.DEAD && !endOfLevel){
             gamecam.position.x = player.b2body.getPosition().x;
         }
-
 
         gamecam.update();
         renderer.setView(gamecam);
@@ -227,17 +246,17 @@ public class PlayScreen implements Screen {
             float x;
             float y;
 
-            for(int i =0 ; i <= player.getLetterCounter(); i++){
+            for(int i = 0; i <= player.getLetterCounter(); i++){
 
                 if(i <= player.getLetterCounter()/2) {
                     x = player.getX() +player.getWidth() * i;
                     y = player.getY() +player.getHeight() * i;
-                    game.batch.draw(player.lettersStopped[i], x, y, player.getWidth(), player.getHeight()); // draw the letter
+                    game.batch.draw(new TextureRegion(player.lettersStopped[i]), x, y, player.getWidth(), player.getHeight()); // draw the letter
 
                 }else{
                     float z = player.getX() - player.getWidth() * (i- player.getLetterCounter()/2);
                     float c = player.getY() +player.getHeight() * (i- player.getLetterCounter()/2);
-                    game.batch.draw(player.lettersStopped[i], z, c, player.getWidth(), player.getHeight()); // draw the letter
+                    game.batch.draw(new TextureRegion(player.lettersStopped[i]), z, c, player.getWidth(), player.getHeight()); // draw the letter
 
                 }
 
@@ -249,6 +268,7 @@ public class PlayScreen implements Screen {
 
 
 
+        babyletter.draw(game.batch);
         for(Enemy enemy: creator.getNumbersArray()) {//draws all enemies
 
             enemy.draw(game.batch);
@@ -260,8 +280,6 @@ public class PlayScreen implements Screen {
             catapult.draw(game.batch);
 
 
-        for(FireBall ball : fireballs)
-            ball.draw(game.batch);
 
 
         for(Plank planks: creator.getPlanks()) {
@@ -275,6 +293,7 @@ public class PlayScreen implements Screen {
         }
 
 
+
         game.batch.end();//close batch
 
         //set our batch to draw what the hud camera sees
@@ -285,19 +304,17 @@ public class PlayScreen implements Screen {
             game.setScreen(new GameOverScreen(game));
             dispose();//all of resources
         }
-
-    }
-
-
-    public void fire(){
-
-        if(isLoaded) {
-            fireballs.add(new FireBall(this, catapult.armBody.getPosition().x, catapult.armBody.getPosition().y, true));
-
-            isLoaded = false;
+        if(nextLevel()){
+            game.setScreen(new NextlevelScreen(game));
+            dispose();//all of resources
         }
 
+
     }
+
+
+
+
 
 
     public boolean gameOver(){
@@ -309,6 +326,20 @@ public class PlayScreen implements Screen {
 
         }
         return false;
+    }
+
+    public float getStateTimer(){
+        return stateTime;
+    }
+
+
+    public boolean nextLevel(){
+        if(nextlevel && BabyLetter.getStateTimer() > 2) {
+            endOfLevel = false;
+            return true;
+        }
+        return false;
+
     }
     @Override
     public void resize(int width, int height) {
@@ -340,6 +371,8 @@ public class PlayScreen implements Screen {
 
     }
 
+
+
     @Override
     public void dispose() {
         map.dispose();
@@ -348,11 +381,11 @@ public class PlayScreen implements Screen {
         b2dr.dispose();
         hud.dispose();
 
+        player.dispose();
+
+
 
 
     }
 
-    public void isFired(boolean isFired) {
-        this.isFired = isFired;
-    }
 }

@@ -1,5 +1,6 @@
 package com.example.alphabetadventure.sprites.endoflevel;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
+import com.badlogic.gdx.utils.Array;
 import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.screens.PlayScreen;
 import com.example.alphabetadventure.sprites.Letter;
@@ -22,7 +24,10 @@ public class Catapult extends TowerPlanks {
     public Body armBody;
     TextureRegion catapultarm;
     TextureRegion catapultbase;
-
+    private Array<FireBall> fireballs;
+    private boolean isLoaded;
+    public boolean firstFireBall;
+    Game game;
     public Catapult(PlayScreen screen, float x, float y, MapObject object) {
         super(screen, x, y, object);
 
@@ -33,8 +38,10 @@ public class Catapult extends TowerPlanks {
 
         //  } else {
         catapultbase = new TextureRegion(screen.getAtlas().findRegion("catapultbase"), 0, 0, 100, 100);
+        fireballs = new Array<FireBall>();
 
         // }
+
 
     }
 
@@ -71,7 +78,7 @@ public class Catapult extends TowerPlanks {
 
 
         armFixtureDef.filter.categoryBits = MainClass.CATAPULT_ARM_BIT;
-        armFixtureDef.filter.maskBits = MainClass.GROUND_BIT |MainClass.FIREBALL_BIT| MainClass.PLANKS_BIT | MainClass.POWER_UP_BOX_BIT | MainClass.NEXT_LETTER_BOX_BIT | MainClass.ENEMY_BIT | MainClass.OBJECT_BIT | MainClass.LETTER_BIT;
+        armFixtureDef.filter.maskBits = MainClass.FIREBALL_BIT ;
 
         FixtureDef baseFixtureDef = new FixtureDef();
         baseFixtureDef.shape = baseShape;
@@ -88,7 +95,7 @@ public class Catapult extends TowerPlanks {
 //edgeshape is just line between two points used to keep the fireball on catapult
         EdgeShape head = new EdgeShape();
         //head. set sets where line will be
-        head.set(new Vector2(-75/MainClass.PPM,0/MainClass.PPM),new Vector2(-75/MainClass.PPM, 15/MainClass.PPM));//-2 offset and 5 above letter head
+        head.set(new Vector2(-75/MainClass.PPM,0/MainClass.PPM),new Vector2(-75/MainClass.PPM, 20/MainClass.PPM));//-2 offset and 5 above letter head
         armFixtureDef.filter.categoryBits = MainClass.CATAPULT_ARM_CATCH_BIT;
        armFixtureDef.filter.maskBits = MainClass.FIREBALL_BIT;
 
@@ -115,14 +122,32 @@ public class Catapult extends TowerPlanks {
     }
 
     public void fireCatapult(){
-        armBody.applyLinearImpulse(new Vector2(.1f, .1f), armBody.getWorldCenter(), true);
+        armBody.applyLinearImpulse(new Vector2(.0f, .03f), armBody.getWorldCenter(), true);
+            }
 
+    public void setIsLoaded(boolean isLoaded){
+        this.isLoaded = isLoaded;
     }
+
 
 
     public void update(float dt) {
 
-        //  stateTime += dt;
+            if(armBody.getLinearVelocity().y ==0 && PlayScreen.endOfLevel&&!isLoaded && armBody.getAngle()>0) {
+                fire();
+        }
+
+
+
+        for(FireBall ball : fireballs) {
+            ball.update(dt);
+            if(ball.isDestroyed())
+                fireballs.removeValue(ball, true);
+        }
+
+
+
+
 
         setRegion(catapultbase);
 
@@ -130,8 +155,21 @@ public class Catapult extends TowerPlanks {
         setRegion(catapultarm);
     }
 
+    public void fire(){
+
+        if(!isLoaded)
+            fireballs.add(new FireBall(screen, armBody.getPosition().x, armBody.getPosition().y, true));
+
+        isLoaded =true;
+    }
+
+
+
     public void draw(Batch batch) {
         super.draw(batch);
+        for(FireBall ball : fireballs)
+            ball.draw(batch);
+
 
         batch.draw(catapultbase,baseBody.getPosition().x -catapultbase.getRegionWidth()/1.5f/MainClass.PPM,baseBody.getPosition().y-catapultbase.getRegionHeight()/1.1f /MainClass.PPM,
             catapultbase.getRegionWidth()/MainClass.PPM,catapultbase.getRegionHeight()/MainClass.PPM,

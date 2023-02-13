@@ -7,11 +7,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
@@ -19,6 +17,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.example.alphabetadventure.MainClass;
+import com.example.alphabetadventure.screens.PlayScreen;
 
 public class Hud implements Disposable {
 
@@ -33,10 +32,11 @@ public class Hud implements Disposable {
     private Label timeLabel;
     private Label levelLabel;
     private Label worldLabel;
-    private Label alphabetAdventureLabel;
+    private Label scoreText;
     public  Button back;
     public  Button forward;
-     public  Button jump;
+    Image right, left, jump;
+
 
     public Hud(SpriteBatch sb) {
         worldTimer = 300;
@@ -61,10 +61,10 @@ public class Hud implements Disposable {
         timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         levelLabel = new Label("1", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         worldLabel = new Label("LEVEL", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        alphabetAdventureLabel = new Label("Score", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        scoreText = new Label("Score", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
         //add our labels to our table, padding the top, and giving them all equal width with expandX
-        table.add(alphabetAdventureLabel).expandX().padTop(10);
+        table.add(scoreText).expandX().padTop(10);
         table.add(worldLabel).expandX().padTop(10);
         table.add(timeLabel).expandX().padTop(10);
         //add a second row to our table
@@ -74,24 +74,22 @@ public class Hud implements Disposable {
         table.add(countdownLabel).expandX();
 
       // Create textures
-        Texture button1Texture = new Texture(Gdx.files.internal("up_arrow.png"));
-        Texture button2Texture = new Texture(Gdx.files.internal("right arrow.png"));
-        Texture button3Texture = new Texture(Gdx.files.internal("left_arrow.png"));
 
-// Create Sprites
-        Sprite button1Sprite = new Sprite(button1Texture);
-        Sprite button2Sprite = new Sprite(button2Texture);
-        Sprite button3Sprite = new Sprite(button3Texture);
 
-// Create Buttons
-        jump = new Button(new SpriteDrawable(button1Sprite));
-        forward= new Button(new SpriteDrawable(button2Sprite));
-        back = new Button(new SpriteDrawable(button3Sprite));
+
+
+        right = new Image(new Texture("right arrow.png"));
+        left = new Image(new Texture("left_arrow.png"));
+        jump = new Image(new Texture("up_arrow.png"));
+
+
+
+
 
 // Set the positions and sizes of the buttons
-        back.setBounds(30,20, 30, 30);
+        left.setBounds(30,20, 30, 30);
 
-       forward.setBounds(90, 20, 30, 30);
+       right.setBounds(90, 20, 30, 30);
 
         jump.setBounds(630, 20, 30, 30);
 
@@ -103,8 +101,8 @@ public class Hud implements Disposable {
 
 
 // Add the buttons to the stage
-        stage.addActor(back);
-        stage.addActor(forward);
+        stage.addActor(left);
+        stage.addActor(right);
         stage.addActor(jump);
 
 
@@ -117,6 +115,8 @@ public class Hud implements Disposable {
 
     public void update(float dt){
 //countdown timer
+
+
         timeCount += dt;
         if(timeCount >= 1){
             worldTimer--;
@@ -124,6 +124,21 @@ public class Hud implements Disposable {
         timeCount =0;
 
         }
+
+        if (PlayScreen.endOfLevel) {
+
+// Create Buttons
+            right.setDrawable(new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("loadbtn.png")))));
+            left.setBounds(30,20, 0, 0);
+
+            right.setBounds(75, 15, 40, 40);
+
+            jump.setBounds(630, 20, 0, 0);
+
+
+        }
+
+
     }
 
     public static void addScore(int value){
@@ -134,5 +149,6 @@ public class Hud implements Disposable {
     @Override
     public void dispose() {
         stage.dispose();
+
     }
 }

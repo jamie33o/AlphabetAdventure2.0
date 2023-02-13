@@ -1,6 +1,6 @@
 package com.example.alphabetadventure.sprites.enemies;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
+
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -8,7 +8,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.utils.Array;
 import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.screens.PlayScreen;
 import com.example.alphabetadventure.sprites.Letter;
@@ -16,20 +15,16 @@ import com.example.alphabetadventure.sprites.Letter;
 public class Numbers extends Enemy {
 
     private float stateTime;//used to keep track of it
-    private TextureRegion[] numbersArray;
-    TextureRegion one_goingforward,two_goingforward,three_goingforward;
+
+    TextureRegion region;
     private boolean setToDestroy;
     private boolean destroyed;
     public Numbers(PlayScreen screen, float x, float y) {
         super(screen, x, y);
 
 
-        numbersArray = new TextureRegion[]{
-                one_goingforward = new TextureRegion(screen.getAtlas().findRegion("1_goingforward"),0,0,60,53),
-                two_goingforward = new TextureRegion(screen.getAtlas().findRegion("2_goingforward"),0,0,60,53),
-                three_goingforward = new TextureRegion(screen.getAtlas().findRegion("3_goingforward"),0,0,60,53)
+                region = new TextureRegion(screen.getAtlas().findRegion("1_goingforward"),0,0,60,53);
 
-        };
 
             stateTime = 0;
             setBounds(getX(), getY(), 33/ MainClass.PPM, 33 / MainClass.PPM);
@@ -46,17 +41,12 @@ public class Numbers extends Enemy {
         if(setToDestroy && !destroyed){//used to change goomba image
             world.destroyBody(b2body);
             destroyed = true;
-            if(Letter.getLetterCounter() <= numbersArray.length) {
-                setRegion(numbersArray[Letter.getLetterCounter()]);
-            }else {
-                setRegion(numbersArray[0]);
-            }
             stateTime = 0;
         }
         else if(!destroyed) {
            b2body.setLinearVelocity(velocity);
             setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
-            setRegion(numbersArray[0]);
+            setRegion(region);
         }
     }
 
@@ -94,10 +84,10 @@ public class Numbers extends Enemy {
         b2body.createFixture(fdef).setUserData(this);
 
 //todo flip enemy image
-        /*if((b2body.getLinearVelocity().x < 0 || !runningRight) &&!region.isFlipX()){//if he is running left and image not flipped left
+      /*  if((b2body.getLinearVelocity().x < 0) &&!region.isFlipX()){//if he is running left and image not flipped left
             region.flip(true,false);//flips image to left
             runningRight = false;
-        } else if ((b2body.getLinearVelocity().x > 0 || runningRight) && region.isFlipX()) {//if he running right and image is facing left and running right checks that he not standing still
+        } else if ((b2body.getLinearVelocity().x > 0) && region.isFlipX()) {//if he running right and image is facing left and running right checks that he not standing still
             region.flip(true, false);//flips image to right
             runningRight = true;
         }*/
