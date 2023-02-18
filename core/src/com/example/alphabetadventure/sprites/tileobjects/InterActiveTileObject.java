@@ -57,9 +57,9 @@ protected MapObject object;
 
     public abstract void onHeadHit(Letter letter);
     public void setCategoryFilter(short filterBit){
-        Filter filter = new Filter();
-        filter.categoryBits = filterBit;
-        fixture.setFilterData(filter);
+        Filter filter2 = new Filter();
+        filter2.categoryBits = filterBit;
+        fixture.setFilterData(filter2);
     }
 
     public TiledMapTileLayer.Cell[] getAdjacentCells(){//gets 4 cell of box hit on layer of tiled map so u can make it disapear

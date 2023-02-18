@@ -1,5 +1,8 @@
 package com.example.alphabetadventure.sprites.endoflevel;
 
+import static com.example.alphabetadventure.MainClass.manager;
+
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -14,13 +17,11 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.screens.PlayScreen;
 
-import java.rmi.UnexpectedException;
-
 public class BabyLetter extends Sprite {
 TextureRegion region;
     public World world;
     public PlayScreen screen;
-    Body b2body;
+    Body bbody;
 
     public static float statetimer;
     public boolean setToDestroy;
@@ -46,7 +47,7 @@ TextureRegion region;
         BodyDef bdef =new BodyDef();
         bdef.position.set(7342/ MainClass.PPM,502/ MainClass.PPM);//use to set start position on map
         bdef.type = BodyDef.BodyType.DynamicBody;
-        b2body = world.createBody(bdef);
+        bbody = world.createBody(bdef);
 
 
         FixtureDef fdef = new FixtureDef();
@@ -59,7 +60,7 @@ TextureRegion region;
                         MainClass.GROUND_BIT|MainClass.DOOR_BIT;
 
         fdef.shape = shape;
-        b2body.createFixture(fdef).setUserData(this);
+        bbody.createFixture(fdef).setUserData(this);
 
 
     }
@@ -68,15 +69,15 @@ TextureRegion region;
         statetimer += dt;
 
 
-        setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
+        setPosition(bbody.getPosition().x - getWidth() / 2, bbody.getPosition().y - getHeight() / 2);
 
 
 
 
         setRegion(region);//this updates the jump and run animations
 
-       if(b2body.getPosition().y < 100/MainClass.PPM) {
-           b2body.applyLinearImpulse(new Vector2(-.01f, .0f), b2body.getWorldCenter(), true);
+       if(bbody.getPosition().y < 100/MainClass.PPM) {
+           bbody.applyLinearImpulse(new Vector2(-.01f, .0f), bbody.getWorldCenter(), true);
            exit();
        }
     }
@@ -84,7 +85,9 @@ TextureRegion region;
 
     public void babyLetterSetToDestroy() {
          setBounds(0, 0, 7 / MainClass.PPM, 7 / MainClass.PPM);
-        screen.nextlevel = true;
+        screen.currentState  = PlayScreen.gameState.NEXTLEVEL;
+        // manager.get("sounds/backgroundmusic1.wav", Music.class).stop();
+        manager.get("sounds/endoflevel.wav", Sound.class).play();
 
 
          statetimer = 0;
@@ -100,7 +103,7 @@ public static float getStateTimer(){
         filter1.categoryBits = MainClass.BABY_LETTER_BIT;
         filter1.maskBits = MainClass.GROUND_BIT|MainClass.DOOR_BIT;
 
-        for (Fixture fixture1 : b2body.getFixtureList()) {
+        for (Fixture fixture1 : bbody.getFixtureList()) {
             fixture1.setFilterData(filter1);//stops all fixture from collidin
         }
     }

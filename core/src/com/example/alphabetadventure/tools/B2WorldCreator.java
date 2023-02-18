@@ -12,8 +12,6 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Filter;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -22,9 +20,8 @@ import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.screens.PlayScreen;
 import com.example.alphabetadventure.sprites.endoflevel.Catapult;
 import com.example.alphabetadventure.sprites.endoflevel.Plank;
-import com.example.alphabetadventure.sprites.tileobjects.PowerUpBox;
-import com.example.alphabetadventure.sprites.enemies.Numbers;
-import com.example.alphabetadventure.sprites.tileobjects.NextLetterBox;
+import com.example.alphabetadventure.sprites.enemies.Eraser;
+import com.example.alphabetadventure.sprites.tileobjects.Box;
 
 public class B2WorldCreator {
     Polygon poly;
@@ -35,7 +32,7 @@ public class B2WorldCreator {
     private Array<Catapult> catapult;
     public float[] vertices;
     public static float[]  armVertices = null, baseVertices = null;
-    private Array<Numbers> numbersArray;
+    private Array<Eraser> eraserArray;
 
     public MapObject object;
     public B2WorldCreator(PlayScreen screen) {
@@ -63,7 +60,7 @@ public class B2WorldCreator {
             fdef.filter.categoryBits = MainClass.GROUND_BIT;
             fdef.filter.maskBits =  MainClass.FIREBALL_BIT| MainClass.PLANKS_BIT |
                     MainClass.BABY_LETTER_BIT |
-                    MainClass.POWER_UP_BOX_BIT |
+                    MainClass.COLLECT_FIREBALL_BIT |MainClass.POWER_UP_BIT|
                     MainClass.OBJECT_BIT |  MainClass.ENEMY_BIT
                     | MainClass.NEXTLETTER_BIT | MainClass.LETTER_BIT;
 
@@ -101,26 +98,21 @@ public class B2WorldCreator {
         }
 
 
-        //creates body for items in box coin?
-        for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            new NextLetterBox(screen, object);//put all the code in side coin class
-
-        }
-
-        //creates body for emptybox
+        //create  box
         for (MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            new PowerUpBox(screen, object);//put all code that was in here in interactive tile object
+            new Box(screen, object);//put all the code in side coin class
+
         }
-        //create all goombas
-        numbersArray = new Array<Numbers>();
+
+
+        //create all erasers
+        eraserArray = new Array<Eraser>();
         for (MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            numbersArray.add(new Numbers(screen, rect.getX() / MainClass.PPM, rect.getY() / MainClass.PPM));//put all code that was in here in interactive tile object
+            eraserArray.add(new Eraser(screen, rect.getX() / MainClass.PPM, rect.getY() / MainClass.PPM));//put all code that was in here in interactive tile object
         }
 
 
@@ -177,6 +169,7 @@ public class B2WorldCreator {
 
 
 
+        //door
         for (MapObject object : map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
@@ -197,8 +190,8 @@ public class B2WorldCreator {
         }
 
     }
-    public Array<Numbers> getNumbersArray() {
-        return numbersArray;
+    public Array<Eraser> getEraserArray() {
+        return eraserArray;
     }
 
     public Array<Plank> getPlanks() {

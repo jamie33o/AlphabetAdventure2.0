@@ -24,7 +24,6 @@ import com.example.alphabetadventure.sprites.items.Item;
 public abstract class TowerPlanks extends Sprite {
     protected PlayScreen screen;
     protected World world;
-    protected Vector2 velocity;
     protected boolean toDestroy;
     protected boolean destroyed;
     protected Body body;
@@ -55,27 +54,18 @@ protected Rectangle bounds1;
 
 
     public void update(float dt) {
-        if (toDestroy && !destroyed) {//
+      //  if (toDestroy && !destroyed) {//
          //   world.destroyBody(body);
            // destroyed = true;
         }
-    }
+    //todo messy sort out towerplank so anything that extends from it is gettin the right methods
 
     public void draw(Batch batch) {
         if (!destroyed)
             super.draw(batch);
     }
 
-    public void destroy() {
-        toDestroy = true;
-    }
 
-    public void reverseVelocity(boolean x, boolean y) {
-        if (x)
-            velocity.x = -velocity.x;
-        if (y)
-            velocity.y = -velocity.y;
 
-    }
 }
 

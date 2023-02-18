@@ -55,7 +55,6 @@ public abstract class Item extends Sprite {
             velocity.x = -velocity.x;
         if(y)
             velocity.y = -velocity.y;
-
     }
 
 

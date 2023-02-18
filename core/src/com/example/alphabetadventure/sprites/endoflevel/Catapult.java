@@ -1,6 +1,10 @@
 package com.example.alphabetadventure.sprites.endoflevel;
 
+import static com.example.alphabetadventure.MainClass.manager;
+
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
@@ -15,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.utils.Array;
 import com.example.alphabetadventure.MainClass;
+import com.example.alphabetadventure.scenes.Hud;
 import com.example.alphabetadventure.screens.PlayScreen;
 import com.example.alphabetadventure.sprites.Letter;
 import com.example.alphabetadventure.tools.B2WorldCreator;
@@ -25,9 +30,8 @@ public class Catapult extends TowerPlanks {
     TextureRegion catapultarm;
     TextureRegion catapultbase;
     private Array<FireBall> fireballs;
-    private boolean isLoaded;
-    public boolean firstFireBall;
-    Game game;
+    private static boolean isLoaded;
+
     public Catapult(PlayScreen screen, float x, float y, MapObject object) {
         super(screen, x, y, object);
 
@@ -122,8 +126,13 @@ public class Catapult extends TowerPlanks {
     }
 
     public void fireCatapult(){
+
+
         armBody.applyLinearImpulse(new Vector2(.0f, .03f), armBody.getWorldCenter(), true);
-            }
+
+
+    }
+    public static boolean IsLoaded(){return isLoaded;}
 
     public void setIsLoaded(boolean isLoaded){
         this.isLoaded = isLoaded;
@@ -133,7 +142,7 @@ public class Catapult extends TowerPlanks {
 
     public void update(float dt) {
 
-            if(armBody.getLinearVelocity().y ==0 && PlayScreen.endOfLevel&&!isLoaded && armBody.getAngle()>0) {
+            if(armBody.getLinearVelocity().y ==0 && screen.isEndOfLevel() && armBody.getAngle()>0) {
                 fire();
         }
 
@@ -157,10 +166,15 @@ public class Catapult extends TowerPlanks {
 
     public void fire(){
 
-        if(!isLoaded)
+        screen.noFireBallsCollecterd = false;
+        if(!isLoaded && Hud.getFireballcounter() >0 ) {
+            //  manager.get("sounds/backgroundmusic1.wav", Music.class).stop();
+            manager.get("sounds/fireballhitsomething.wav", Sound.class).play();
+            Hud.addFireball(-1);
             fireballs.add(new FireBall(screen, armBody.getPosition().x, armBody.getPosition().y, true));
+            isLoaded =true;
 
-        isLoaded =true;
+        }
     }
 
 

@@ -1,5 +1,8 @@
 package com.example.alphabetadventure.sprites;
 
+import static com.example.alphabetadventure.MainClass.manager;
+
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -22,7 +25,7 @@ public class Letter extends Sprite {
 
 
     //Java Enums Previous Next Enums An enum is a special "class" that represents a group of constants (unchangeable variables, like final variables)
-    public enum State {FALLING,JUMPING,STANDING,RUNNING,DEAD};
+    public enum State {FALLING,JUMPING,STANDING,RUNNING,DEAD}
     public State currentState;
     public State previousState;
 
@@ -40,20 +43,12 @@ public class Letter extends Sprite {
     public  TextureRegion[] lettersStopped;
     public  TextureRegion[] lettersMoving;
 
-    private static int letterCounter ;
+
     TextureRegion region1;
     public PlayScreen screen;
 
     public int exitDone = 0;
     private boolean setToDestroy;
-    public static int getLetterCounter() {
-        return letterCounter;
-    }
-
-    public void setLetterCounter(int letterCounter) {
-        Letter.letterCounter = letterCounter;
-    }
-
 
     public Letter(PlayScreen screen){//put Playscreen screen so it would get atlas
 
@@ -63,6 +58,9 @@ public class Letter extends Sprite {
         previousState = State.STANDING;
         stateTimer = 0;
      //  runningRight1 = false;
+
+
+
 
         lettersMoving = new TextureRegion[]{
                  new TextureRegion(screen.getAtlas().findRegion("a_going_forward"),0,0,60,53),
@@ -87,12 +85,12 @@ public class Letter extends Sprite {
     };
 
         //create dead mario texture region
-        letterDead = new TextureRegion(lettersMoving[letterCounter]);
+        letterDead = new TextureRegion(lettersMoving[screen.getLetterCounter()]);
 
 
         defineLetter();           //in the atlas x is top left y is top left then width and height of image
         setBounds(0,0,30/MainClass.PPM,33/MainClass.PPM);//setbounds is set to let know how large to render letter on screen
-        setRegion(lettersStopped[letterCounter]);
+        setRegion(     new TextureRegion(screen.getAtlas().findRegion("a_standing"),0,0,60,53));
 
 
     }
@@ -108,11 +106,13 @@ public class Letter extends Sprite {
 
 
 
-        if(PlayScreen.endOfLevel) {
-            b2body.applyLinearImpulse(new Vector2(-.03f, 0), b2body.getWorldCenter(), true);
+        if(screen.isEndOfLevel() && exitDone < 200) {
+            b2body.applyLinearImpulse(new Vector2(-.02f, 0), b2body.getWorldCenter(), true);
             exitDone++;
+
             if(exitDone == 1)
              exit();
+
 
         }
 
@@ -129,7 +129,7 @@ public TextureRegion getFrame(float dt){
 
     switch(currentState){//switch between states to change which for loop animation to use
             case RUNNING:
-                region1 = lettersMoving[letterCounter];
+                region1 = lettersMoving[screen.getLetterCounter()];
 
                 break;
         case DEAD:
@@ -137,7 +137,7 @@ public TextureRegion getFrame(float dt){
             case FALLING:
             case STANDING:
         default:
-            region1 =  lettersStopped[letterCounter];
+            region1 =  lettersStopped[screen.getLetterCounter()];
                 break;
 
     }
@@ -183,8 +183,11 @@ public TextureRegion getFrame(float dt){
 
 
         if ( currentState != State.JUMPING ) {
-            b2body.applyLinearImpulse(new Vector2(0, 0.3f), b2body.getWorldCenter(), true);
+            b2body.applyLinearImpulse(new Vector2(0, 2f), b2body.getWorldCenter(), true);
             currentState = State.JUMPING;
+            //manager.get("sounds/backgroundmusic1.wav", Music.class).stop();
+            manager.get("sounds/jump.wav", Sound.class).play();
+
         }
     }
 
@@ -193,7 +196,7 @@ public TextureRegion getFrame(float dt){
 
     public void defineLetter(){
         BodyDef bdef =new BodyDef();
-        bdef.position.set(6662/ MainClass.PPM,32/ MainClass.PPM);//use to set start position on map
+        bdef.position.set(362/ MainClass.PPM,32/ MainClass.PPM);//use to set start position on map
         bdef.type = BodyDef.BodyType.DynamicBody;
 
         b2body = world.createBody(bdef);
@@ -207,9 +210,9 @@ public TextureRegion getFrame(float dt){
         fdef.filter.maskBits =
                 MainClass.PLANKS_BIT|
                 MainClass.GROUND_BIT|
-                MainClass.NEXT_LETTER_BOX_BIT |
+                MainClass.BOX_BIT |
                 MainClass.POWER_UP_BIT|
-                MainClass.POWER_UP_BOX_BIT |
+                MainClass.COLLECT_FIREBALL_BIT|
                 MainClass.OBJECT_BIT|
                 MainClass.ENEMY_HEAD_BIT|
                 MainClass.ENEMY_BIT|
@@ -241,8 +244,8 @@ public TextureRegion getFrame(float dt){
 
         if (!isDead()) {
 
-         //  MarioBros.manager.get("audio/music/mario_music.ogg", Music.class).stop();
-          //  MarioBros.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
+            //manager.get("sounds/backgroundmusic1.wav", Music.class).stop();
+            manager.get("sounds/dead.wav", Sound.class).play();
 
 
             letterIsDead = true;
@@ -262,6 +265,9 @@ public TextureRegion getFrame(float dt){
 
 public void hit(Enemy enemy){
 die();
+    //manager.get("sounds/backgroundmusic1.wav", Music.class).stop();
+    manager.get("sounds/dead.wav", Sound.class).play();
+
 
 }
 
@@ -269,6 +275,8 @@ public void setToDestroy() {
 
     b2body.setLinearVelocity(0,0);
 
+        // manager.get("sounds/backgroundmusic1.wav", Music.class).stop();
+        manager.get("sounds/endoflevel.wav", Sound.class).play();
 
    setBounds(0, 0,  15/ MainClass.PPM, 15 / MainClass.PPM);
 
@@ -285,10 +293,6 @@ public float getStateTimer(){
         return stateTimer;
 }
 
-
-public void speedUp(){
-        b2body.applyLinearImpulse(new Vector2(6f, 0), b2body.getWorldCenter(), true);
-}
 
     public void dispose() {
        getTexture().dispose();

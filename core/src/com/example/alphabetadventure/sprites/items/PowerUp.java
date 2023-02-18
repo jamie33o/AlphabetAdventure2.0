@@ -1,27 +1,34 @@
 package com.example.alphabetadventure.sprites.items;
 
+import static com.example.alphabetadventure.MainClass.manager;
+
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.example.alphabetadventure.MainClass;
+import com.example.alphabetadventure.scenes.Hud;
 import com.example.alphabetadventure.screens.PlayScreen;
 import com.example.alphabetadventure.sprites.Letter;
 
 public class PowerUp extends Item{
 
-    Letter letterClass;
+
     TextureRegion region;
     public PowerUp(PlayScreen screen, float x, float y) {
         super(screen, x, y);
 
         //todo add flames coming from skateboard when get powerup
         region = new TextureRegion(screen.getAtlas().findRegion("powerUp"),0,0,60,60);
-        //  setBounds(getX(), getY(), 30 / MainClass.PPM, 30 / MainClass.PPMz);//setbounds is set to let know how large to render letter on screen
-        //setRegion(lettersInBox[0]);
+
         setRegion(region);
-        velocity = new Vector2(0.7f,0);//sets movement
+        if(Letter.isRunningRight()) {
+            velocity = new Vector2(0.7f, 0);//sets movement
+        }else{
+            velocity = new Vector2(-0.7f,0);
+        }
 
 
     }
@@ -40,8 +47,7 @@ public class PowerUp extends Item{
         fdef.filter.maskBits = MainClass.LETTER_BIT |//wat can this fixture colide with
                 MainClass.OBJECT_BIT |
                 MainClass.GROUND_BIT |
-                MainClass.POWER_UP_BOX_BIT |
-                MainClass.NEXT_LETTER_BOX_BIT;
+                MainClass.BOX_BIT;
         fdef.shape = shape;
         body.createFixture(fdef).setUserData(this);//attach fixture to body
 
@@ -49,8 +55,11 @@ public class PowerUp extends Item{
 
     @Override
     public void use(Letter letter) {
+//manager.get("sounds/backgroundmusic1.wav", Music.class).stop();
+        manager.get("sounds/powerupbox.wav", Sound.class).play();
 
 
+        Hud.addPowerUp(+1);
         destroy();
     }
 
@@ -59,12 +68,16 @@ public class PowerUp extends Item{
         super.update(dt);
         setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
 
-        velocity.y = body.getLinearVelocity().y;//sets movent of item from box
-        body.setLinearVelocity(velocity);
+        if(!toDestroy) {//todo this was affecting fireball velocity so put if not todestroy sort out
+            velocity.y = body.getLinearVelocity().y;//sets movent of item from box
 
+               body.setLinearVelocity(velocity);
+
+           }
+        }
 
     }
-}
+
 
 
 
