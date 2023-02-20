@@ -55,7 +55,7 @@ public class CollectFireballs extends Item{
 //manager.get("sounds/backgroundmusic1.wav", Music.class).stop();
         manager.get("sounds/powerupbox.wav", Sound.class).play();
 
-        Hud.addFireball(1);
+        screen.hud.addFireball(1);
         destroy();
     }
 

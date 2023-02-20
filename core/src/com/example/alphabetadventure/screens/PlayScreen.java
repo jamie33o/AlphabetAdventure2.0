@@ -4,6 +4,7 @@ package com.example.alphabetadventure.screens;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
@@ -16,11 +17,12 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
+
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
 import com.example.alphabetadventure.MainClass;
 import com.example.alphabetadventure.scenes.Hud;
 import com.example.alphabetadventure.sprites.endoflevel.BabyLetter;
@@ -44,7 +46,7 @@ public class PlayScreen implements Screen {
     public MainClass game;//brings in game class
     private OrthographicCamera gamecam;//follows along the game world and wat viewport display
     public static Viewport gamePort;
-    private Hud hud;
+    public Hud hud;
     private TmxMapLoader mapLoader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
@@ -77,7 +79,6 @@ public class PlayScreen implements Screen {
         this.endOfLevel = endOfLevel;
     }
 
-    public static int level =1;
     public boolean endOfLevel = false;
 
     private boolean isfired = true;
@@ -95,18 +96,19 @@ public class PlayScreen implements Screen {
     }
 
 
-    public enum gameState {PAUSED,UNPAUSED,GAMEOVER,NEXTLEVEL,STARTGAME};
+    public enum gameState {PAUSED,UNPAUSED,GAMEOVER,NEXTLEVEL,STARTGAME}
 
     public gameState currentState;
-    public gameState previousState;
 
+    private Preferences prefs;
 
-    public boolean paused;
+    public int level;
+
 
     public PlayScreen(final MainClass game){
         atlas = new TextureAtlas("mainatlas.atlas");
-
-
+        prefs = Gdx.app.getPreferences("my-game");
+        level = prefs.getInteger("current-level", 1); // Default to level 1 if no value is stored
 
 
         this.game = game;//brings in game class
@@ -127,7 +129,7 @@ public class PlayScreen implements Screen {
 
         //world creates gravity
         world = new World(new Vector2(0,-200 / MainClass.PPM),true);//sets the gravity
-        b2dr = new Box2DDebugRenderer();//creates lines around objects
+       // b2dr = new Box2DDebugRenderer();//creates lines around objects
 
         creator = new B2WorldCreator(this);
 
@@ -194,8 +196,10 @@ public class PlayScreen implements Screen {
                     player.b2body.getLinearVelocity().y <.1) {
 
                 currentState = PlayScreen.gameState.PAUSED;
+                System.out.println("menu button" +hud.getFireballcounter());
 
-                game.setScreen(new MenuScreen(game, this, currentState));
+                game.setScreen(new MenuScreen(game, this, currentState,this.hud));
+
             }
 
 
@@ -232,26 +236,31 @@ public class PlayScreen implements Screen {
 
 
             //power up
-            if(!endOfLevel&& Hud.getPowerUpCounter() > 0 && player.b2body.getLinearVelocity().x<4f &&
+            if(!endOfLevel&& hud.getPowerUpCounter() > 0 && player.b2body.getLinearVelocity().x<4f &&
                     Gdx.input.isTouched() &&
                     Gdx.input.getX() > gamePort.getScreenWidth()/1.1 &&
-                    Gdx.input.getY() < gamePort.getScreenHeight()/1.15f ||
+                    Gdx.input.getY() < gamePort.getScreenHeight()/1.2f ||
 
                     !endOfLevel && Gdx.input.isTouched(1)&&
-                            Hud.getPowerUpCounter() > 0 &&
+                            hud.getPowerUpCounter() > 0 &&
 
-                Gdx.input.getY(1) < gamePort.getScreenHeight()/1.15f )
+                Gdx.input.getY(1) < gamePort.getScreenHeight()/1.2f )
                // Gdx.input.getX(1) > gamePort.getScreenWidth()/1.1 )
 
             {
-                if(player.b2body.getLinearVelocity().x < -0.01f ){
-                   if(level==2) {
+                if(player.b2body.getLinearVelocity().x < -0.01f && player.b2body.getLinearVelocity().x > -2.5f&& stateTime>2){
+                    stateTime=0;
+                    hud.addPowerUp(-1);
+                    if(level==2) {
                        player.b2body.applyLinearImpulse(new Vector2(-8f, 0), player.b2body.getWorldCenter(), true);
                    }else{
                        player.b2body.applyLinearImpulse(new Vector2(-4f, 0), player.b2body.getWorldCenter(), true);
 
                    }
-                }else if(player.b2body.getLinearVelocity().x > 0.01f) {
+                }else if(stateTime>2&&player.b2body.getLinearVelocity().x > 0.01f || player.b2body.getLinearVelocity().x == 0f&& player.b2body.getLinearVelocity().x < 2.5f) {
+
+                    stateTime=0;
+                    hud.addPowerUp(-1);
                     if(level==2) {
                         player.b2body.applyLinearImpulse(new Vector2(8f, 0), player.b2body.getWorldCenter(), true);
                     }else{
@@ -260,7 +269,7 @@ public class PlayScreen implements Screen {
                     }
                 }
 
-                Hud.addPowerUp(-1);
+
             }
 
             //catapult button
@@ -284,6 +293,7 @@ public class PlayScreen implements Screen {
         if(currentState == gameState.UNPAUSED) {
         handleSpawnedItems();
         stateTime += dt;
+
 
 
         if(currentState == gameState.NEXTLEVEL)
@@ -365,7 +375,7 @@ public class PlayScreen implements Screen {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);//clears  screen between frames
 
             renderer.render();
-            b2dr.render(world, gamecam.combined);//game.combined projection matrixs for it
+          //  b2dr.render(world, gamecam.combined);//game.combined projection matrixs for it
 
             //render letter to screen
             game.batch.setProjectionMatrix(gamecam.combined);//main cam set only wat game can see
@@ -417,7 +427,7 @@ public class PlayScreen implements Screen {
 
             }
 
-
+System.out.println(babyletter.nextlevel +" " +babyletter.statetimer);
             game.batch.end();//close batch
 
             //set our batch to draw what the hud camera sees
@@ -425,29 +435,30 @@ public class PlayScreen implements Screen {
             hud.stage.draw();
         }
             if (getGameState() == gameState.GAMEOVER||getGameState() == gameState.NEXTLEVEL) {
-                game.setScreen(new MenuScreen(game,this,currentState));
-                dispose();//all of resources
+
+                game.setScreen(new MenuScreen(game,this,currentState,this.hud));
             }
 
     }
 
 
     public gameState getGameState(){
-        if(player.currentState == Letter.State.DEAD&& player.getStateTimer() > 5|| FireBall.isFireballsGone()){
+        if(player.currentState == Letter.State.DEAD&& player.getStateTimer() > 5){
 
             //todo make all one statement for game over
-            FireBall.setFireBallsGone(false);
+
             endOfLevel = false;
            setLetterCounter(0);
 
             currentState = gameState.GAMEOVER;
 
 
-        }else if(Hud.getFireballcounter() == 0  && endOfLevel && noFireBallsCollecterd){
+        }else if(hud.getFireballcounter() == 0  && endOfLevel && stateTime > 10/*&& noFireBallsCollecterd*/){
             setLetterCounter(0);
             endOfLevel = false;
 
-            noFireBallsCollecterd = true;
+
+            //noFireBallsCollecterd = true;
             currentState = gameState.GAMEOVER;
 
         }else if (hud.worldTimer == 0) {
@@ -456,10 +467,19 @@ public class PlayScreen implements Screen {
 
             currentState = gameState.GAMEOVER;
 
-    }else{
+    }else if(babyletter.nextlevel && babyletter.getStateTimer() > 5){
+            currentState = gameState.NEXTLEVEL;
+
+
+
+
+
+        }else{
             currentState = gameState.UNPAUSED;
 
         }
+
+
         return currentState;
     }
 
@@ -507,7 +527,7 @@ public class PlayScreen implements Screen {
         map.dispose();
         renderer.dispose();
         world.dispose();
-        b2dr.dispose();
+       // b2dr.dispose();
         hud.dispose();
 
         player.dispose();

@@ -1,152 +1,159 @@
 
 mainatlas.png
-size: 1024, 512
+size: 2048, 512
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 1_goingforward
   rotate: false
-  xy: 784, 353
+  xy: 1238, 344
   size: 49, 55
   orig: 49, 55
   offset: 0, 0
   index: -1
 1_standing
   rotate: false
-  xy: 846, 343
+  xy: 1184, 352
   size: 52, 56
   orig: 52, 56
   offset: 0, 0
   index: -1
 2_goingforward
   rotate: false
-  xy: 932, 162
+  xy: 1019, 353
   size: 54, 55
   orig: 54, 55
   offset: 0, 0
   index: -1
 2_standing
   rotate: false
-  xy: 875, 105
+  xy: 848, 353
   size: 55, 55
   orig: 55, 55
   offset: 0, 0
   index: -1
 3_goingforward
   rotate: false
-  xy: 875, 162
+  xy: 791, 353
   size: 55, 55
   orig: 55, 55
   offset: 0, 0
   index: -1
 3_standing
   rotate: false
-  xy: 875, 219
+  xy: 734, 353
   size: 55, 55
   orig: 55, 55
   offset: 0, 0
   index: -1
 a_going_forward
   rotate: false
-  xy: 835, 401
+  xy: 1244, 401
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 a_standing
   rotate: false
-  xy: 900, 335
+  xy: 1634, 401
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 b_going_forward
   rotate: false
-  xy: 748, 52
+  xy: 1374, 401
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 b_standing
   rotate: false
-  xy: 748, 170
+  xy: 1309, 401
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 babyA
   rotate: false
-  xy: 784, 291
+  xy: 478, 2
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: -1
 brokenplank
   rotate: false
-  xy: 478, 2
+  xy: 1040, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 c_goin_forward
   rotate: false
-  xy: 813, 46
+  xy: 1504, 401
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 c_stopped
   rotate: false
-  xy: 937, 453
+  xy: 580, 77
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 catapultarmdown
   rotate: false
-  xy: 631, 410
+  xy: 478, 166
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 catapultarmflat
   rotate: false
-  xy: 580, 308
+  xy: 478, 64
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 catapultarmup
   rotate: false
-  xy: 478, 308
+  xy: 632, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 catapultbase
   rotate: false
-  xy: 580, 206
+  xy: 1142, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 crackedplank
   rotate: false
-  xy: 478, 206
+  xy: 734, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
+crate1
+  rotate: false
+  xy: 478, 370
+  size: 152, 140
+  orig: 152, 140
+  offset: 0, 0
+  index: -1
 d_goin_forward
   rotate: false
-  xy: 911, 276
+  xy: 1764, 401
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 d_stopped
   rotate: false
-  xy: 846, 276
+  xy: 1699, 401
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
@@ -160,175 +167,175 @@ door
   index: -1
 e_goin_forward
   rotate: false
-  xy: 748, 111
+  xy: 1439, 401
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 e_stopped
   rotate: false
-  xy: 900, 394
+  xy: 1569, 401
   size: 63, 57
   orig: 63, 57
   offset: 0, 0
   index: -1
 eraser
   rotate: false
-  xy: 813, 105
+  xy: 1891, 398
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: -1
 exit
   rotate: false
-  xy: 580, 50
+  xy: 1856, 460
   size: 100, 50
   orig: 100, 50
   offset: 0, 0
   index: -1
 f_goingforward
   rotate: false
-  xy: 965, 338
+  xy: 1075, 353
   size: 53, 55
   orig: 53, 55
   offset: 0, 0
   index: -1
 f_standin
   rotate: false
-  xy: 932, 219
+  xy: 962, 353
   size: 55, 55
   orig: 55, 55
   offset: 0, 0
   index: -1
 fireballs
   rotate: false
-  xy: 2, 4
+  xy: 632, 378
   size: 100, 30
   orig: 100, 30
   offset: 0, 0
   index: -1
 flatplank
   rotate: false
-  xy: 478, 410
+  xy: 478, 268
   size: 151, 100
   orig: 151, 100
   offset: 0, 0
   index: -1
 g_goingforward
   rotate: false
-  xy: 932, 107
+  xy: 1953, 391
   size: 56, 53
   orig: 56, 53
   offset: 0, 0
   index: -1
 g_standing
   rotate: false
-  xy: 878, 48
+  xy: 905, 353
   size: 55, 55
   orig: 55, 55
   offset: 0, 0
   index: -1
 h_goingforward
   rotate: false
-  xy: 965, 395
+  xy: 1130, 352
   size: 52, 56
   orig: 52, 56
   offset: 0, 0
   index: -1
 h_standing
   rotate: false
-  xy: 784, 229
+  xy: 540, 2
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: -1
 howto
   rotate: false
-  xy: 580, 102
+  xy: 1652, 460
   size: 100, 50
   orig: 100, 50
   offset: 0, 0
   index: -1
 left_arrow
   rotate: false
-  xy: 682, 122
+  xy: 580, 136
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 loadbtn
   rotate: false
-  xy: 733, 410
+  xy: 836, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 menu
   rotate: false
-  xy: 104, 5
+  xy: 2, 5
   size: 30, 29
   orig: 30, 29
   offset: 0, 0
   index: -1
 nextlevel
   rotate: false
-  xy: 682, 254
+  xy: 1754, 460
   size: 100, 50
   orig: 100, 50
   offset: 0, 0
   index: -1
 playagain
   rotate: false
-  xy: 682, 358
+  xy: 1448, 460
   size: 100, 50
   orig: 100, 50
   offset: 0, 0
   index: -1
 powerUp
   rotate: false
-  xy: 813, 167
+  xy: 1829, 398
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: -1
 restart
   rotate: false
-  xy: 835, 460
+  xy: 1244, 460
   size: 100, 50
   orig: 100, 50
   offset: 0, 0
   index: -1
 resume
   rotate: false
-  xy: 682, 306
+  xy: 1550, 460
   size: 100, 50
   orig: 100, 50
   offset: 0, 0
   index: -1
 right arrow
   rotate: false
-  xy: 682, 56
+  xy: 580, 202
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 start
   rotate: false
-  xy: 580, 154
+  xy: 1346, 460
   size: 100, 50
   orig: 100, 50
   offset: 0, 0
   index: -1
 up_arrow
   rotate: false
-  xy: 682, 188
+  xy: 1958, 446
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 verticalplank
   rotate: false
-  xy: 478, 104
+  xy: 938, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0

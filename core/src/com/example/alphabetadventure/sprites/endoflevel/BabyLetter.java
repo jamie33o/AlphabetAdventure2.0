@@ -2,6 +2,8 @@ package com.example.alphabetadventure.sprites.endoflevel;
 
 import static com.example.alphabetadventure.MainClass.manager;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,10 +25,13 @@ TextureRegion region;
     public PlayScreen screen;
     Body bbody;
 
-    public static float statetimer;
+    public float statetimer;
     public boolean setToDestroy;
     TiledMap map;
     public boolean nextlevel;
+
+    private Preferences prefs;
+
     public BabyLetter(PlayScreen screen) {
         this.world = screen.getWorld();
         this.screen = screen;
@@ -45,7 +50,12 @@ TextureRegion region;
 
     public void defineBabyLetter(){
         BodyDef bdef =new BodyDef();
-        bdef.position.set(7342/ MainClass.PPM,502/ MainClass.PPM);//use to set start position on map
+        if(screen.level ==1) {
+            bdef.position.set(7342 / MainClass.PPM, 502 / MainClass.PPM);//use to set start position on map
+        }else{
+            bdef.position.set(6392 / MainClass.PPM, 302 / MainClass.PPM);//use to set start position on map
+
+        }
         bdef.type = BodyDef.BodyType.DynamicBody;
         bbody = world.createBody(bdef);
 
@@ -85,15 +95,23 @@ TextureRegion region;
 
     public void babyLetterSetToDestroy() {
          setBounds(0, 0, 7 / MainClass.PPM, 7 / MainClass.PPM);
-        screen.currentState  = PlayScreen.gameState.NEXTLEVEL;
+         nextlevel = true;
+
+         if(screen.level == 1) {
+             screen.level++;
+         }else {
+             screen.level--;
+         }
         // manager.get("sounds/backgroundmusic1.wav", Music.class).stop();
         manager.get("sounds/endoflevel.wav", Sound.class).play();
 
-
+        prefs = Gdx.app.getPreferences("my-game");
+        prefs.putInteger("current-level", screen.level);
+        prefs.flush();
          statetimer = 0;
     }
 
-public static float getStateTimer(){
+public float getStateTimer(){
         return statetimer;
 }
 

@@ -73,10 +73,10 @@ public class NextLetter extends Item{
 
 
         setPosition(body.getPosition().x - getWidth() / 2 , body.getPosition().y - getHeight() / 2);
-        if(screen.getLetterCounter() <= lettersMoving.length-1) {
+
             setRegion(forwards);
 
-        }
+
 
         if((body.getLinearVelocity().x < 0) &&!forwards.isFlipX()){//if he is running left and image not flipped left
             forwards.flip(true,false);//flips image to left

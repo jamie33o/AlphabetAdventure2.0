@@ -77,7 +77,7 @@ public class Box extends InterActiveTileObject {
                 a = cell.getTile().getId();
             }
         }
-        Hud.addScore(100);
+        screen.hud.addScore(100);
 
     }
 }

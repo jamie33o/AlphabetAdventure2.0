@@ -133,26 +133,8 @@ public class WorldContactListener implements ContactListener {
                 } else {
                     ((PowerUp) fixb.getUserData()).use((Letter) fixA.getUserData());//other wise fixture fixb must be item then we want to use it on fix a wich must be letter
                 }
-
-              /*  //makes letter speed up
-                if(fixA.getFilterData().categoryBits == MainClass.LETTER_BIT){
-                    ((Letter) fixA.getUserData()).speedUp();//if its then we use on letter
-                }else
-                    ((Letter)fixb.getUserData()).speedUp();//other wise fixture fixb must be item then we want to use it on fix a wich must be letter
-
-*/
-
                 break;
 
-
-            /*case MainClass.PLANKS_BIT|MainClass.FIREBALL_BIT  :
-                if(fixA.getFilterData().categoryBits == MainClass.FIREBALL_BIT) {
-                //   ((FireBall) fixA.getUserData()).fireBallSetToDestroy();
-                }else {
-                 //   ((FireBall) fixb.getUserData()).fireBallSetToDestroy();
-
-                }
-                break;*/
             case MainClass.LETTER_BIT| MainClass.DOOR_BIT:
                 if (fixA.getFilterData().categoryBits == MainClass.LETTER_BIT) {//then we know fixa is enemy
                     ((Letter) fixA.getUserData()).setToDestroy();

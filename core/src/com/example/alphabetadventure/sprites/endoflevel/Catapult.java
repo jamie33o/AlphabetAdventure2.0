@@ -142,7 +142,7 @@ public class Catapult extends TowerPlanks {
 
     public void update(float dt) {
 
-            if(armBody.getLinearVelocity().y ==0 && screen.isEndOfLevel() && armBody.getAngle()>0) {
+            if(armBody.getLinearVelocity().y == 0 && screen.isEndOfLevel() && armBody.getAngle()>0 && screen.getStateTimer()>3) {
                 fire();
         }
 
@@ -166,15 +166,16 @@ public class Catapult extends TowerPlanks {
 
     public void fire(){
 
-        screen.noFireBallsCollecterd = false;
-        if(!isLoaded && Hud.getFireballcounter() >0 ) {
+      if(!isLoaded && screen.hud.getFireballcounter() >0) {
+           screen.setStateTimer(0);
+
             //  manager.get("sounds/backgroundmusic1.wav", Music.class).stop();
             manager.get("sounds/fireballhitsomething.wav", Sound.class).play();
-            Hud.addFireball(-1);
+            screen.hud.addFireball(-1);
             fireballs.add(new FireBall(screen, armBody.getPosition().x, armBody.getPosition().y, true));
             isLoaded =true;
 
-        }
+      }
     }
 
 

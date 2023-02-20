@@ -8,11 +8,14 @@
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/astopped"
         android:isGame="true"
         android:appCategory="game"
         android:label="@string/app_name"
         tools:ignore="UnusedAttribute">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3061474414782380~2765355406"/>
         <activity
             android:name="com.example.alphabetadventure.AndroidLauncher"
             android:label="@string/app_name" 

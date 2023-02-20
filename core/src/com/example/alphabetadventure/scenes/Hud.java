@@ -28,15 +28,15 @@ public class Hud implements Disposable {
     public Integer worldTimer;
     private boolean timeUp; // true when the world timer reaches 0
     private float timeCount;
-    private static Integer score;
-    private static Integer fireballcounter;
-    private static Integer powerupCount;
+    private  Integer score;
+    private  Integer fireballcounter;
+    private  Integer powerupCount;
 
     private Label countdownLabel;
-    private static Label scoreLabel;
-    private static Label fireballlabel;
+    private Label scoreLabel;
+    private  Label fireballlabel;
 
-    private static Label powerupLabel;
+    private  Label powerupLabel;
 
 
     private Label timeLabel;
@@ -48,14 +48,14 @@ public class Hud implements Disposable {
     public Image rightImg, leftImg, jumpImg,powerupImg, menuScreen;
 
     PlayScreen screen;
-    MenuScreen menuscreen;
+
 
     public Hud(SpriteBatch sb, final PlayScreen screen) {
         this.screen = screen;
         worldTimer = 300;
         timeCount =0;
         score = 0;
-        fireballcounter = 0;
+        fireballcounter=0;
         powerupCount = 0;
         //setup the HUD viewport using a new camera seperate from our gamecam
         //define our stage using that viewport and our games spritebatch
@@ -79,7 +79,7 @@ public class Hud implements Disposable {
 
 
         timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        levelLabel = new Label(String.format("%01d", PlayScreen.level), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        levelLabel = new Label(String.format("%01d", screen.level), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         worldLabel = new Label("LEVEL", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         scoreText = new Label("Score", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         fireBallText = new Label("FireBalls", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
@@ -124,7 +124,7 @@ public class Hud implements Disposable {
 
         jumpImg.setBounds(630, 20, 40, 30);
 
-        powerupImg.setBounds(650, 50, 40, 30);
+        powerupImg.setBounds(650, 60, 40, 30);
 
 
 
@@ -144,11 +144,6 @@ public class Hud implements Disposable {
     }
 
     public void update(float dt){
-//countdown timer
-
-
-
-
 
         timeCount += dt;
         if(timeCount >= 1){
@@ -179,30 +174,31 @@ public class Hud implements Disposable {
 
 
     }
-    public static void addPowerUp(int value){
+    public  void addPowerUp(int value){
 
         powerupCount+= value;
         powerupLabel.setText(String.format("%02d",powerupCount));
     }
-    public static int getPowerUpCounter(){
+    public  int getPowerUpCounter(){
 
         return powerupCount;
     }
-    public static void addFireball(int value){
+    public  void addFireball(int value){
 
         fireballcounter+= value;
         fireballlabel.setText(String.format("%02d",fireballcounter));
     }
 
-    public static int getFireballcounter(){
+    public  int getFireballcounter(){
 
        return fireballcounter;
     }
-    public static void addScore(int value){
+    public void addScore(int value){
 
         score+= value;
         scoreLabel.setText(String.format("%06d",score));
     }
+
     @Override
     public void dispose() {
         stage.dispose();

@@ -88,8 +88,7 @@ public class FireBall extends Sprite {
         if((stateTime > 10 && !Catapult.IsLoaded() && fireBallSetToDestroy) && !destroyed ) {
             world.destroyBody(b1body);
             destroyed = true;
-            if(stateTime > 5 && Hud.getFireballcounter() == 0)
-                fireballsGone = true;
+
         }
 
         if(b1body.getPosition().x > 70 || b1body.getLinearVelocity().x < 0 )
@@ -97,13 +96,6 @@ public class FireBall extends Sprite {
 
     }
 
-public static boolean isFireballsGone(){
-        return fireballsGone;
-}
-
-public static void setFireBallsGone(boolean fireballsGone){
-        FireBall.fireballsGone = fireballsGone;
-}
 
 
     public void fireBallSetToDestroy(){

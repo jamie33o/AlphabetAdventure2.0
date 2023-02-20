@@ -50,19 +50,24 @@ public class MainClass extends Game {//changed to game from application adapter
 	public static AssetManager manager;
 	private PlayScreen playScreen;
 
+	public AdHandler handler;
+
+	public MainClass(AdHandler handler){
+		this.handler = handler;
+	}
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		playScreen = new PlayScreen(this);
+
 		playScreen.currentState = PlayScreen.gameState.STARTGAME;
 
-		setScreen(new MenuScreen(this,playScreen,playScreen.currentState));
+		setScreen(new MenuScreen(this,playScreen,playScreen.currentState,playScreen.hud));
 
 		//setScreen(new PlayScreen(this));//pass game itself  so it can set screens
 	           //synchronized way to load should use Asynchronized
 	    manager = new AssetManager();
-		manager.load("sounds/backgroundmusic1.wav", Music.class);
 		manager.load("sounds/catapultfired1.wav", Sound.class);
 		manager.load("sounds/endoflevel.wav", Sound.class);
 		manager.load("sounds/fireballhitsomething.wav", Sound.class);
@@ -75,8 +80,7 @@ public class MainClass extends Game {//changed to game from application adapter
 		manager.load("sounds/jumponenemy.wav", Sound.class);
 
 		manager.finishLoading();
-
-	}
+		}
 
 	@Override
 	public void render () {

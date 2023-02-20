@@ -59,7 +59,7 @@ public class PowerUp extends Item{
         manager.get("sounds/powerupbox.wav", Sound.class).play();
 
 
-        Hud.addPowerUp(+1);
+        screen.hud.addPowerUp(+1);
         destroy();
     }
 
